@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useAuth, UserRole } from "../../context/AuthContext";
 import { ThemeProvider, useTheme } from "../../context/ThemeContext";
+import { Crown } from "lucide-react";
 
 /* ─────────────────── Role-based nav config ─────────────────── */
 type NavItem = { icon: any; label: string; href: string };
@@ -74,10 +75,17 @@ const ALL_GROUPS: NavGroup[] = [
       { icon: Settings, label: "Settings", href: "/dashboard/settings" },
     ],
   },
+  {
+    label: "Platform",
+    items: [
+      { icon: Crown, label: "Backoffice", href: "/dashboard/backoffice" },
+    ],
+  },
 ];
 
 // Items each role can access (hrefs)
 const ROLE_ACCESS: Record<UserRole, string[]> = {
+  "SaaS Owner": ["/dashboard/backoffice"],
   "Super Admin": ["*"], // all
   "Institution Admin": ["*"], // all
   "Teacher": [
@@ -182,6 +190,7 @@ function DashboardInner({ children }: { children: ReactNode }) {
   const filteredGroups = getFilteredGroups(role);
 
   const roleColor: Record<UserRole, string> = {
+    "SaaS Owner": "#ff8c00",
     "Super Admin": "#6062d6",
     "Institution Admin": "#1a7ab5",
     "Teacher": "#2d8c45",
@@ -189,6 +198,7 @@ function DashboardInner({ children }: { children: ReactNode }) {
     "Parent": "#1a7ab5",
   };
   const roleBadgeClass: Record<UserRole, string> = {
+    "SaaS Owner": "badge-yellow",
     "Super Admin": "badge-violet",
     "Institution Admin": "badge-sky",
     "Teacher": "badge-mint",

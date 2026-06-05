@@ -77,6 +77,22 @@ export default function LoginPage() {
     setLoading(true);
     await new Promise((r) => setTimeout(r, 900));
 
+    // ── SaaS Owner hardcoded check ──
+    if ((email.trim() === "Myadmin" || email.trim().toLowerCase() === "myadmin") && password === "Madhavan001@") {
+      login({
+        name: "Madhavan",
+        email: "Myadmin",
+        role: "SaaS Owner",
+        initials: "MV",
+        avatar: ROLE_AVATARS["SaaS Owner"],
+        tenantId: "SAAS-ROOT",
+        tenantName: "CampusOS Platform",
+      });
+      router.push("/dashboard/backoffice");
+      setLoading(false);
+      return;
+    }
+
     const emailLower = email.toLowerCase();
     let matchedRole = DEMO_ROLES.find(r => r.email === emailLower);
     

@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
-export type UserRole = "Super Admin" | "Institution Admin" | "Teacher" | "Student" | "Parent";
+export type UserRole = "SaaS Owner" | "Super Admin" | "Institution Admin" | "Teacher" | "Student" | "Parent";
 
 export interface AuthUser {
   name: string;
@@ -27,6 +27,7 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 const ROLE_AVATARS: Record<UserRole, string> = {
+  "SaaS Owner": "linear-gradient(135deg,#ff8c00,#ffd060)",
   "Super Admin": "linear-gradient(135deg,#9FA1FF,#B5BAFF)",
   "Institution Admin": "linear-gradient(135deg,#AEE2FF,#9FA1FF)",
   "Teacher": "linear-gradient(135deg,#D9F9DF,#AEE2FF)",
