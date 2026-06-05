@@ -242,11 +242,11 @@ ul, ol { list-style: none; }
 .portal-tab {
   display: flex; align-items: center; gap: 16px;
   padding: 16px 20px; border-radius: var(--r-sm);
-  background: transparent; border: 1.5px solid transparent;
+  background: var(--bg); border: 1.5px solid var(--border);
   transition: all .25s; text-align: left; cursor: pointer;
 }
-.portal-tab:hover { background: var(--bg-alt); }
-.portal-tab.active { background: var(--white); border-color: var(--border-med); box-shadow: var(--shadow-sm); }
+.portal-tab:hover { background: var(--white); border-color: var(--border-med); box-shadow: var(--shadow-xs); }
+.portal-tab.active { background: var(--white); border-color: var(--c-violet); box-shadow: var(--shadow-sm); transform: translateX(4px); }
 .ptab-icon {
   width: 44px; height: 44px; border-radius: 12px;
   display: flex; align-items: center; justify-content: center;

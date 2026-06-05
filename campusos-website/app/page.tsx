@@ -241,7 +241,10 @@ function Portals() {
                 className={`portal-tab ${active===x.key?"active":""}`} 
                 onClick={()=>setActive(x.key)}
               >
-                <div className="ptab-icon" style={{background:active===x.key?x.p.bg:'transparent', color:active===x.key?x.p.c:'var(--ink-3)'}}>
+                <div className="ptab-icon" style={{
+                  background: active===x.key ? x.p.bg : 'var(--bg-alt)', 
+                  color: active===x.key ? x.p.c : 'var(--ink-3)'
+                }}>
                   {x.emoji}
                 </div>
                 <div className="ptab-text">
