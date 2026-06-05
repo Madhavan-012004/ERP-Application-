@@ -27,10 +27,17 @@ const SERVICES = [
 ];
 
 const PORTALS = [
-  { key:"parent",  emoji:"👨‍👩‍👧", label:"Parent",   p:C.lavender, desc:"Complete real-time visibility into your child's school life.",
-    feats:[{i:"👶",t:"Multi-Child Support",d:"Manage multiple children from one account."},{i:"📅",t:"Attendance Tracking",d:"Real-time absent and late alerts."},{i:"📝",t:"Homework & Assignments",d:"View all submissions in one place."},{i:"📊",t:"Results & Report Cards",d:"Access marks and report cards instantly."},{i:"💳",t:"Online Fee Payments",d:"Pay fees and download receipts."},{i:"🚌",t:"Bus GPS Tracking",d:"Live tracking of the school bus."},{i:"🏥",t:"Medical Notifications",d:"Instant alerts for campus incidents."},{i:"🎫",t:"Event Registrations",d:"Register for school events and competitions."}] },
-  { key:"student", emoji:"🎓", label:"Student",  p:C.mint,     desc:"A personalised academic companion that keeps students on track.",
-    feats:[{i:"🖥️",t:"Personal Dashboard",d:"All academic info in one clean view."},{i:"📅",t:"Timetable Access",d:"Daily and weekly class schedules."},{i:"📤",t:"Homework Submission",d:"Submit assignments with deadline reminders."},{i:"📝",t:"Mock Tests & Exams",d:"Attempt tests and view results."},{i:"📜",t:"Digital Certificates",d:"Download achievement certificates."},{i:"📚",t:"Library Access",d:"Browse catalogue and issued books."},{i:"🏠",t:"Hostel Management",d:"Room details and outpass requests."},{i:"💬",t:"Internal Messaging",d:"Chat securely without sharing numbers."}] },
+  { key:"student_parent", emoji:"👨‍👩‍👧‍👦", label:"Student & Parent", p:C.mint, desc:"A unified dashboard for academics and real-time child progress tracking.",
+    feats:[
+      {i:"🖥️",t:"Personal Dashboard",d:"All academic info in one clean view."},
+      {i:"📅",t:"Timetable & Attendance",d:"Daily schedules and absent alerts."},
+      {i:"📤",t:"Homework & Assignments",d:"View and submit assignments digitally."},
+      {i:"📊",t:"Results & Report Cards",d:"Access marks and report cards instantly."},
+      {i:"💳",t:"Online Fee Payments",d:"Pay fees securely and download receipts."},
+      {i:"🚌",t:"Bus GPS Tracking",d:"Live tracking of the school bus."},
+      {i:"📚",t:"Library Access",d:"Browse catalogue and issued books."},
+      {i:"💬",t:"Internal Messaging",d:"Chat securely without sharing numbers."}
+    ] },
   { key:"teacher", emoji:"📚", label:"Teacher",  p:C.sky,      desc:"Powerful tools so educators can focus on teaching, not paperwork.",
     feats:[{i:"✅",t:"Attendance Management",d:"Mark attendance in seconds."},{i:"📝",t:"Homework Creation",d:"Create and assign homework digitally."},{i:"📊",t:"Marks Entry & Results",d:"Enter marks and publish results."},{i:"📋",t:"Report Card Generator",d:"Auto-generate report cards."},{i:"🤖",t:"AI Teaching Assistance",d:"AI question papers and homework."},{i:"🗓️",t:"Timetable Management",d:"Personal schedule and room info."},{i:"🏆",t:"Club Management",d:"Manage clubs and extracurriculars."},{i:"💬",t:"Parent Communication",d:"Send updates directly to parents."}] },
   { key:"admin",   emoji:"🏫", label:"Admin",    p:C.violet,   desc:"Complete operational control over every department and process.",
@@ -62,7 +69,7 @@ const BENEFITS = [
 ];
 
 const PLANS = [
-  { name:"Starter",    icon:"🌱", ibg:C.mint.bg,     monthly:"₹20",       yearly:"₹150",        pm:"per student / month", py:"per student / year",           tag:"For small schools beginning their digital journey.",           feats:["Up to 500 students","5 role dashboards","Attendance & timetable","Basic fee management","Parent communication","Email support"],            cta:"Get Started",     cs:"pc-cta-g", hot:false },
+  { name:"Starter",    icon:"🌱", ibg:C.mint.bg,     monthly:"₹20",       yearly:"₹150",        pm:"per student / month", py:"per student / year",           tag:"For small schools beginning their digital journey.",           feats:["Up to 500 students","3 role dashboards","Attendance & timetable","Basic fee management","Parent communication","Email support"],            cta:"Get Started",     cs:"pc-cta-g", hot:false },
   { name:"Pro",        icon:"⚡", ibg:C.violet.bg,   monthly:"₹15 – ₹20", yearly:"₹100 – ₹150", pm:"per student / month", py:"per student / year",           tag:"Complete access for growing schools with flexible billing.",   feats:["Up to 1,000 students","Everything in Starter","All Smart Campus Modules","AI-Powered Features","Transport & Hostel","Priority Support"], cta:"Start Free Trial", cs:"pc-cta-p", hot:true  },
   { name:"Enterprise", icon:"🏛️",ibg:C.gold.bg,     monthly:null,        yearly:null,           pm:"",                   py:"tailored to your institution",  tag:"Custom plans for large institutions and multi-campus groups.", feats:["Unlimited students","Multi-campus support","Custom integrations","Dedicated account manager","SLA guarantee","On-premise option"],     cta:"Contact Sales",   cs:"pc-cta-g", hot:false },
 ];
@@ -92,11 +99,10 @@ function Nav() {
 
 function Hero() {
   const cards = [
-    {icon:"🎓",p:C.violet,   t:"Student Portal",    s:"Grades, Timetable & Assignments"},
-    {icon:"👨‍👩‍👧",p:C.lavender, t:"Parent Dashboard",  s:"Real-time child progress tracking"},
-    {icon:"📚",p:C.sky,      t:"Teacher Console",   s:"Attendance, Marks & Reports"},
-    {icon:"🏫",p:C.mint,     t:"Admin Control",     s:"Full institution management"},
-    {icon:"🤖",p:C.gold,    t:"AI Assistant",      s:"Smart automation & insights"},
+    {icon:"👨‍👩‍👧‍👦",p:C.mint,     t:"Student & Parent Portal", s:"Grades, Timetable & Progress"},
+    {icon:"📚",p:C.sky,      t:"Teacher Console",         s:"Attendance, Marks & Reports"},
+    {icon:"🏫",p:C.violet,   t:"Admin Control",           s:"Full institution management"},
+    {icon:"🤖",p:C.gold,     t:"AI Assistant",            s:"Smart automation & insights"},
   ];
   return (
     <section className="hero">
@@ -121,7 +127,7 @@ function Hero() {
               <a href="#features" className="btn btn-white btn-xl">Explore Features</a>
             </div>
             <div className="hero-stats">
-              {[{n:"₹15",l:"Starting / student"},{n:"20+",l:"Campus modules"},{n:"5",l:"Role dashboards"},{n:"30 min",l:"Setup time"}].map((s,i)=>(
+              {[{n:"₹15",l:"Starting / student"},{n:"20+",l:"Campus modules"},{n:"3",l:"Role dashboards"},{n:"30 min",l:"Setup time"}].map((s,i)=>(
                 <div className="stat-cell" key={i}>
                   <div className="stat-n gt">{s.n}</div>
                   <div className="stat-l">{s.l}</div>
@@ -221,7 +227,7 @@ function CoreServices() {
 }
 
 function Portals() {
-  const [active,setActive] = useState("parent");
+  const [active,setActive] = useState("student_parent");
   const p = PORTALS.find(x=>x.key===active)!;
   return (
     <section className="sec" style={{background:"var(--white)"}} id="features">
@@ -549,7 +555,7 @@ function Footer() {
           </div>
           {[
             {h:"Platform", ls:[["#services","Core Services"],["#features","Role Portals"],["#modules","Smart Modules"],["#ai","AI Features"],["#pricing","Pricing"]]},
-            {h:"Portals",  ls:[["#features","Parent Portal"],["#features","Student Portal"],["#features","Teacher Portal"],["#features","Admin Portal"]]},
+            {h:"Portals",  ls:[["#features","Student & Parent Portal"],["#features","Teacher Portal"],["#features","Admin Portal"]]},
             {h:"Company",  ls:[["#about","About Us"],["#contact","Contact"],["#","Privacy Policy"],["#","Terms of Service"]]},
           ].map(col=>(
             <div key={col.h}>
