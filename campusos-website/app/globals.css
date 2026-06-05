@@ -260,16 +260,21 @@ ul, ol { list-style: none; }
 .pavatar { width: 50px; height: 50px; border-radius: 13px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
 .ptitle { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
 .pdesc  { font-size: 13px; color: var(--ink-2); }
-.pgrid  { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+.pgrid  { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
 .pfeat  {
-  padding: 18px; border-radius: var(--r-xs);
-  border: 1.5px solid var(--border); background: var(--bg);
-  transition: all .2s;
+  padding: 24px 22px; border-radius: var(--r-sm);
+  border: 1px solid var(--border); background: var(--bg);
+  box-shadow: none;
+  transition: all .25s; display: flex; flex-direction: column;
 }
-.pfeat:hover { background: var(--white); border-color: var(--border-med); box-shadow: var(--shadow-sm); }
-.pfeat-icon { font-size: 18px; width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
-.pfeat-t { font-size: 12.5px; font-weight: 700; color: var(--ink-1); margin-bottom: 5px; }
-.pfeat-d { font-size: 11.5px; color: var(--ink-3); line-height: 1.5; }
+.pfeat:hover { border-color: var(--border-med); background: var(--white); box-shadow: var(--shadow-md); transform: translateY(-3px); }
+.pfeat-icon {
+  font-size: 22px; width: 44px; height: 44px; border-radius: 11px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 16px; flex-shrink: 0;
+}
+.pfeat-t { font-size: 14px; font-weight: 700; color: var(--ink-1); margin-bottom: 7px; letter-spacing: -.01em; }
+.pfeat-d { font-size: 12.5px; color: var(--ink-3); line-height: 1.6; }
 
 /* ─── Smart modules ─── */
 .mods-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 14px; }
