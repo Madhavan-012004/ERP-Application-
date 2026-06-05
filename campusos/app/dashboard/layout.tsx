@@ -9,7 +9,7 @@ import {
   HeartPulse, Library, Package, Megaphone, Trophy, UsersRound,
   ShieldCheck, BarChart3, Settings, Bell, Search, ChevronDown,
   Menu, X, LogOut, Moon, Sun, MessageSquare, Zap,
-  Building2, Boxes, User
+  Building2, Boxes, User, UserCog
 } from "lucide-react";
 import { useAuth, UserRole } from "../../context/AuthContext";
 import { ThemeProvider, useTheme } from "../../context/ThemeContext";
@@ -69,6 +69,7 @@ const ALL_GROUPS: NavGroup[] = [
   {
     label: "Administration",
     items: [
+      { icon: UserCog, label: "User Management", href: "/dashboard/users" },
       { icon: Building2, label: "Institution", href: "/dashboard/institution" },
       { icon: Boxes, label: "Admissions", href: "/dashboard/admissions" },
       { icon: Zap, label: "Certificates", href: "/dashboard/certificates" },

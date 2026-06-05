@@ -2,83 +2,65 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  GraduationCap, Shield, Eye, EyeOff, ArrowRight,
-  Sparkles, Users, BookOpen, BarChart3, Lock, ChevronRight,
+  GraduationCap, Eye, EyeOff, ArrowRight,
+  Sparkles, Lock, AlertCircle,
 } from "lucide-react";
-import { useAuth, UserRole, ROLE_AVATARS } from "../context/AuthContext";
+import { useAuth, ROLE_AVATARS } from "../context/AuthContext";
 
-const DEMO_ROLES: {
-  role: UserRole; icon: any; color: string; bg: string; desc: string;
-  email: string; name: string; initials: string;
-}[] = [
-  {
-    role: "Super Admin",
-    icon: Shield,
-    color: "#6062d6",
-    bg: "rgba(96,98,214,0.10)",
-    desc: "Full platform access",
-    email: "superadmin@campusos.io",
-    name: "Platform Admin",
-    initials: "PA",
-  },
-  {
-    role: "Institution Admin",
-    icon: BarChart3,
-    color: "#1a7ab5",
-    bg: "rgba(26,122,181,0.10)",
-    desc: "Institution-wide management",
-    email: "admin@dps.school.in",
-    name: "Rahul Anand",
-    initials: "RA",
-  },
-  {
-    role: "Teacher",
-    icon: BookOpen,
-    color: "#2d8c45",
-    bg: "rgba(45,140,69,0.10)",
-    desc: "Class & subject management",
-    email: "teacher@dps.school.in",
-    name: "Priya Sharma",
-    initials: "PS",
-  },
-  {
-    role: "Student",
-    icon: GraduationCap,
-    color: "#5458c4",
-    bg: "rgba(84,88,196,0.10)",
-    desc: "My classes, attendance & fees",
-    email: "student@dps.school.in",
-    name: "Arjun Mehta",
-    initials: "AM",
-  },
-  {
-    role: "Parent",
-    icon: Users,
-    color: "#1a7ab5",
-    bg: "rgba(26,122,181,0.10)",
-    desc: "Monitor your child's progress",
-    email: "parent@dps.school.in",
-    name: "Suresh Mehta",
-    initials: "SM",
-  },
-];
+const LS_INSTITUTIONS = "campusos_institutions";
+const LS_USERS = "campusos_users"; // users created by institution admins
+
+interface Institution {
+  id: string;
+  name: string;
+  city: string;
+  type: string;
+  adminId: string;
+  adminPass: string;
+  adminEmail: string;
+  status: "Active" | "Pending" | "Suspended";
+  plan: string;
+  studentCap: number;
+  createdAt: string;
+}
+
+interface InstitutionUser {
+  id: string;
+  institutionId: string;
+  institutionName: string;
+  loginId: string;
+  password: string;
+  name: string;
+  role: "Super Admin" | "Teacher" | "Student" | "Parent" | "Institution Admin";
+  email?: string;
+  createdAt: string;
+}
+
+function getInstitutions(): Institution[] {
+  try { return JSON.parse(localStorage.getItem(LS_INSTITUTIONS) || "[]"); } catch { return []; }
+}
+
+function getUsers(): InstitutionUser[] {
+  try { return JSON.parse(localStorage.getItem(LS_USERS) || "[]"); } catch { return []; }
+}
 
 export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuth();
-  const [email, setEmail] = useState("");
+  const [loginId, setLoginId] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleLogin = async () => {
-    if (!email) return;
-    
+    if (!loginId.trim() || !password.trim()) return;
+    setError("");
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 900));
+    await new Promise((r) => setTimeout(r, 700));
 
-    // ── SaaS Owner hardcoded check ──
-    if ((email.trim() === "Myadmin" || email.trim().toLowerCase() === "myadmin") && password === "Madhavan001@") {
+    // ── 1. SaaS Owner ──
+    if (loginId.trim() === "Myadmin" && password === "Madhavan001@") {
       login({
         name: "Madhavan",
         email: "Myadmin",
@@ -93,31 +75,56 @@ export default function LoginPage() {
       return;
     }
 
-    const emailLower = email.toLowerCase();
-    let matchedRole = DEMO_ROLES.find(r => r.email === emailLower);
-    
-    // Fallback logic if exact email isn't in DEMO_ROLES
-    if (!matchedRole) {
-      if (emailLower.includes("super")) matchedRole = DEMO_ROLES.find(r => r.role === "Super Admin");
-      else if (emailLower.includes("admin")) matchedRole = DEMO_ROLES.find(r => r.role === "Institution Admin");
-      else if (emailLower.includes("teacher")) matchedRole = DEMO_ROLES.find(r => r.role === "Teacher");
-      else if (emailLower.includes("parent")) matchedRole = DEMO_ROLES.find(r => r.role === "Parent");
-      else matchedRole = DEMO_ROLES.find(r => r.role === "Student");
+    // ── 2. Institution Admin (created from Backoffice) ──
+    const institutions = getInstitutions();
+    const matchedInst = institutions.find(
+      (i) => i.adminId === loginId.trim() && i.adminPass === password
+    );
+    if (matchedInst) {
+      if (matchedInst.status === "Suspended") {
+        setError("This institution account has been suspended. Contact CampusOS support.");
+        setLoading(false);
+        return;
+      }
+      const initials = matchedInst.name.split(" ").map((w: string) => w[0]).slice(0, 2).join("").toUpperCase();
+      login({
+        name: matchedInst.name + " Admin",
+        email: matchedInst.adminEmail,
+        role: "Institution Admin",
+        initials,
+        avatar: ROLE_AVATARS["Institution Admin"],
+        tenantId: matchedInst.id,
+        tenantName: matchedInst.name,
+      });
+      router.push("/dashboard");
+      setLoading(false);
+      return;
     }
 
-    if (!matchedRole) matchedRole = DEMO_ROLES.find(r => r.role === "Student")!;
+    // ── 3. Users created by Institution Admin ──
+    const users = getUsers();
+    const matchedUser = users.find(
+      (u) => u.loginId === loginId.trim() && u.password === password
+    );
+    if (matchedUser) {
+      const initials = matchedUser.name.split(" ").map((w: string) => w[0]).slice(0, 2).join("").toUpperCase();
+      login({
+        name: matchedUser.name,
+        email: matchedUser.email || matchedUser.loginId,
+        role: matchedUser.role,
+        initials,
+        avatar: ROLE_AVATARS[matchedUser.role],
+        tenantId: matchedUser.institutionId,
+        tenantName: matchedUser.institutionName,
+      });
+      router.push("/dashboard");
+      setLoading(false);
+      return;
+    }
 
-    login({
-      name: matchedRole.name,
-      email: email,
-      role: matchedRole.role,
-      initials: matchedRole.initials,
-      avatar: ROLE_AVATARS[matchedRole.role],
-      tenantId: "DPS-001",
-      tenantName: "Delhi Public School",
-    });
-
-    router.push("/dashboard");
+    // ── 4. No match ──
+    setError("Invalid login ID or password. Please check your credentials.");
+    setLoading(false);
   };
 
   return (
@@ -206,35 +213,34 @@ export default function LoginPage() {
           </div>
 
           <form onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
-            {/* Email / ID */}
+            {/* Login ID */}
             <div style={{ marginBottom: "16px" }}>
-              <label style={{ fontSize: "12.5px", color: "var(--text-secondary)", fontWeight: "500", display: "block", marginBottom: "7px" }}>Email / ID</label>
-              <input 
-                className="input-field" 
+              <label style={{ fontSize: "12.5px", color: "var(--text-secondary)", fontWeight: "500", display: "block", marginBottom: "7px" }}>Login ID</label>
+              <input
+                className="input-field"
                 type="text"
-                placeholder="Enter your email or ID"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                style={{ width: "100%" }} 
+                placeholder="Enter your login ID"
+                value={loginId}
+                onChange={e => { setLoginId(e.target.value); setError(""); }}
+                style={{ width: "100%" }}
                 required
+                autoComplete="username"
               />
             </div>
 
             {/* Password */}
-            <div style={{ marginBottom: "24px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "7px" }}>
-                <label style={{ fontSize: "12.5px", color: "var(--text-secondary)", fontWeight: "500", display: "block" }}>Password</label>
-                <a href="#" style={{ fontSize: "12px", color: "var(--violet)", textDecoration: "none", fontWeight: "500" }}>Forgot password?</a>
-              </div>
+            <div style={{ marginBottom: "20px" }}>
+              <label style={{ fontSize: "12.5px", color: "var(--text-secondary)", fontWeight: "500", display: "block", marginBottom: "7px" }}>Password</label>
               <div style={{ position: "relative" }}>
-                <input 
-                  className="input-field" 
-                  type={showPass ? "text" : "password"} 
+                <input
+                  className="input-field"
+                  type={showPass ? "text" : "password"}
                   placeholder="••••••••"
                   value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  style={{ width: "100%", paddingRight: "44px" }} 
+                  onChange={e => { setPassword(e.target.value); setError(""); }}
+                  style={{ width: "100%", paddingRight: "44px" }}
                   required
+                  autoComplete="current-password"
                 />
                 <button type="button" onClick={() => setShowPass(!showPass)} style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "var(--text-muted)" }}>
                   {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -242,8 +248,16 @@ export default function LoginPage() {
               </div>
             </div>
 
+            {/* Error message */}
+            {error && (
+              <div style={{ marginBottom: "16px", padding: "10px 14px", borderRadius: "8px", background: "rgba(201,64,64,0.10)", border: "1px solid rgba(201,64,64,0.25)", display: "flex", alignItems: "flex-start", gap: "8px" }}>
+                <AlertCircle size={15} color="#c94040" style={{ flexShrink: 0, marginTop: "1px" }} />
+                <span style={{ fontSize: "13px", color: "#c94040", lineHeight: "1.5" }}>{error}</span>
+              </div>
+            )}
+
             {/* Login button */}
-            <button type="submit" className="btn-primary" disabled={loading || !email || !password} style={{ width: "100%", padding: "12px", fontSize: "14px" }}>
+            <button type="submit" className="btn-primary" disabled={loading || !loginId || !password} style={{ width: "100%", padding: "12px", fontSize: "14px", marginBottom: "16px" }}>
               {loading ? (
                 <div style={{ width: "18px", height: "18px", border: "2px solid rgba(0,0,0,0.2)", borderTopColor: "#0a0b0f", borderRadius: "50%", animation: "spin-slow 0.6s linear infinite" }} />
               ) : (
@@ -252,7 +266,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div style={{ display: "flex", alignItems: "center", gap: "12px", margin: "20px 0" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px", margin: "4px 0 16px" }}>
             <div style={{ flex: 1, height: "1px", background: "var(--border)" }} />
             <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>or</span>
             <div style={{ flex: 1, height: "1px", background: "var(--border)" }} />
@@ -264,7 +278,7 @@ export default function LoginPage() {
 
           <div style={{ marginTop: "24px", textAlign: "center" }}>
             <p style={{ fontSize: "11.5px", color: "var(--text-muted)" }}>
-              🔒 Secured by JWT · Multi-Factor Auth · SOC2 Compliant
+              🔒 Your credentials are issued by your institution admin
             </p>
           </div>
         </div>
