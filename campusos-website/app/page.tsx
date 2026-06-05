@@ -1,150 +1,89 @@
 "use client";
 import { useState } from "react";
 
-/* ══════════════════════════════════════════════
-   PALETTE
-   --violet   #9B9EF0
-   --lavender #B5BAFF
-   --sky      #AEE2FF
-   --mint     #D9F9DF
-══════════════════════════════════════════════ */
-
-const P = {
-  violet:   { c: "#9B9EF0", bg: "rgba(155,158,240,0.1)",  border: "rgba(155,158,240,0.22)" },
-  lavender: { c: "#B5BAFF", bg: "rgba(181,186,255,0.1)",  border: "rgba(181,186,255,0.22)" },
-  sky:      { c: "#AEE2FF", bg: "rgba(174,226,255,0.1)",  border: "rgba(174,226,255,0.22)" },
-  mint:     { c: "#D9F9DF", bg: "rgba(217,249,223,0.1)",  border: "rgba(217,249,223,0.22)" },
-  rose:     { c: "#FCA5A5", bg: "rgba(252,165,165,0.1)",  border: "rgba(252,165,165,0.22)" },
-  gold:     { c: "#FCD34D", bg: "rgba(252,211,77,0.1)",   border: "rgba(252,211,77,0.22)"  },
+/* ─── palette lookup ─── */
+const C = {
+  violet:   { c:"#6B6EC8", bg:"#EEEEFF", border:"rgba(107,110,200,.22)" },
+  lavender: { c:"#8B8EE8", bg:"#F2F2FF", border:"rgba(139,142,232,.22)" },
+  sky:      { c:"#5AB4DC", bg:"#EAF7FF", border:"rgba(90,180,220,.22)"  },
+  mint:     { c:"#4DC48A", bg:"#EDFAF2", border:"rgba(77,196,138,.22)"  },
+  rose:     { c:"#D96B6B", bg:"#FFF0F0", border:"rgba(217,107,107,.22)" },
+  gold:     { c:"#C49A28", bg:"#FFFBEA", border:"rgba(196,154,40,.22)"  },
 };
 
-/* ── DATA ── */
-const WHY_POINTS = [
-  { icon:"📄", text:"Zero Paper Campus"                },
-  { icon:"🔒", text:"No Mobile Number Sharing"          },
-  { icon:"💬", text:"Secure Internal Communication"     },
-  { icon:"🎓", text:"Complete Academic Management"      },
-  { icon:"📊", text:"Real-Time Monitoring & Analytics"  },
-  { icon:"🤖", text:"AI-Powered Smart Features"         },
-  { icon:"📱", text:"Mobile & Web Access"               },
-  { icon:"🏫", text:"One Platform for All Operations"   },
+/* ─── data ─── */
+const WHY = [
+  {icon:"📄",t:"Zero Paper Campus"},        {icon:"🔒",t:"No Mobile Number Sharing"},
+  {icon:"💬",t:"Secure Internal Comms"},     {icon:"🎓",t:"Complete Academic Mgmt"},
+  {icon:"📊",t:"Real-Time Analytics"},       {icon:"🤖",t:"AI-Powered Features"},
+  {icon:"📱",t:"Mobile & Web Access"},       {icon:"🏫",t:"One Platform, All Ops"},
 ];
 
-const CORE_SERVICES = [
-  { ...P.violet,  icon:"🎓", title:"Academic Management",       desc:"Manage attendance, timetables, assignments, exams, report cards, certificates, and performance analytics across your institution.",   points:["Attendance","Timetable","Assignments","Exams","Report Cards","Certificates"] },
-  { ...P.sky,     icon:"💬", title:"Communication & Engagement", desc:"Seamless and secure communication between students, parents, teachers, and management — without sharing personal phone numbers.", points:["Secure Messaging","Notifications","Announcements","Events","Activity Mgmt","Emergency Alerts"] },
-  { ...P.mint,    icon:"🏛️", title:"Campus Operations",          desc:"Digitally manage admissions, fees, transport, hostel, library, medical services, and all administrative workflows in one place.",  points:["Admissions","Fee Management","Transport","Hostel","Library","Inventory"] },
-  { ...P.lavender,icon:"🤖", title:"AI & Digital Transformation",desc:"AI-powered insights, smart automation, academic analytics, and intelligent recommendations to future-proof your institution.",       points:["AI Homework","Question Papers","Analytics","Attendance AI","Smart Reports","Insights"] },
+const SERVICES = [
+  { p:C.violet,  icon:"🎓", title:"Academic Management",        desc:"Complete academic lifecycle — attendance, timetables, assignments, exams, report cards, certificates, and performance analytics.", pts:["Attendance","Timetable","Assignments","Exams","Report Cards","Certificates"] },
+  { p:C.sky,     icon:"💬", title:"Communication & Engagement",  desc:"Secure, internal communication between students, parents, teachers, and management — no WhatsApp, no number sharing.", pts:["Secure Messaging","Notifications","Announcements","Events","Activity Mgmt","Emergency Alerts"] },
+  { p:C.mint,    icon:"🏛️", title:"Campus Operations",           desc:"Admissions, fees, transport, hostel, library, medical — every campus service digitised and centralised.", pts:["Admissions","Fee Management","Transport","Hostel","Library","Inventory"] },
+  { p:C.lavender,icon:"🤖", title:"AI & Digital Transformation", desc:"AI-powered insights, automation, academic analytics, and intelligent recommendations to future-proof your institution.", pts:["AI Homework","Question Papers","Analytics","Attendance AI","Smart Reports","Insights"] },
 ];
 
 const PORTALS = [
-  {
-    key:"parent", emoji:"👨‍👩‍👧", label:"Parent Portal",   ...P.lavender,
-    desc:"Complete real-time visibility into your child's school life — attendance, results, fees, and more.",
-    features:[
-      { icon:"👶", title:"Multi-Child Support",    desc:"Manage multiple children from a single parent account." },
-      { icon:"📅", title:"Attendance Tracking",    desc:"Real-time alerts when your child is absent or late." },
-      { icon:"📝", title:"Homework & Assignments", desc:"View all homework and assignment submissions." },
-      { icon:"📊", title:"Results & Report Cards", desc:"Access marks and report cards instantly." },
-      { icon:"💳", title:"Online Fee Payments",    desc:"Pay fees online and download digital receipts." },
-      { icon:"🚌", title:"Bus GPS Tracking",        desc:"Live GPS tracking of the school bus route." },
-      { icon:"🏥", title:"Medical Notifications",  desc:"Instant alerts for any medical incidents." },
-      { icon:"🎫", title:"Event Registrations",    desc:"Register children for school events and competitions." },
-    ],
-  },
-  {
-    key:"student", emoji:"🎓", label:"Student Portal",   ...P.mint,
-    desc:"A personalised academic companion that keeps students organised, engaged, and always on track.",
-    features:[
-      { icon:"🖥️", title:"Personal Dashboard",    desc:"All academic info in one clean, organised view." },
-      { icon:"📅", title:"Timetable Access",       desc:"View daily and weekly class schedules." },
-      { icon:"📤", title:"Homework Submission",    desc:"Submit assignments digitally with deadline reminders." },
-      { icon:"📝", title:"Mock Tests & Exams",     desc:"Attempt online tests and view results with insights." },
-      { icon:"📜", title:"Digital Certificates",  desc:"Download achievement and participation certificates." },
-      { icon:"📚", title:"Library Access",         desc:"Browse catalogue and manage issued books." },
-      { icon:"🏠", title:"Hostel Management",      desc:"Room details, outpass requests, and hostel updates." },
-      { icon:"💬", title:"Internal Messaging",     desc:"Communicate securely without sharing phone numbers." },
-    ],
-  },
-  {
-    key:"teacher", emoji:"📚", label:"Teacher Portal",   ...P.sky,
-    desc:"Powerful tools so educators can focus on teaching, not administrative paperwork.",
-    features:[
-      { icon:"✅", title:"Attendance Management", desc:"Mark attendance for any class in seconds." },
-      { icon:"📝", title:"Homework Creation",      desc:"Create and assign homework digitally." },
-      { icon:"📊", title:"Marks Entry & Results", desc:"Enter marks and publish results to students." },
-      { icon:"📋", title:"Report Card Generator",  desc:"Auto-generate formatted report cards." },
-      { icon:"🤖", title:"AI Teaching Assistance", desc:"Generate question papers and homework with AI." },
-      { icon:"🗓️", title:"Timetable Management",  desc:"Personal schedule, substitution alerts, room info." },
-      { icon:"🏆", title:"Club Management",        desc:"Manage student clubs and extracurriculars." },
-      { icon:"💬", title:"Parent Communication",  desc:"Send updates to parents directly and securely." },
-    ],
-  },
-  {
-    key:"admin", emoji:"🏫", label:"Admin Portal", ...P.violet,
-    desc:"Complete operational control over every department, process, and person in your institution.",
-    features:[
-      { icon:"📋", title:"Admissions & Enrollment", desc:"Digital forms, document collection, and enrollment." },
-      { icon:"👥", title:"Staff Management",         desc:"Manage all staff records, roles, leave, and payroll." },
-      { icon:"💰", title:"Fee Collection & Finance", desc:"Track collections, invoices, and defaulters." },
-      { icon:"📊", title:"Reports & Analytics",      desc:"Institution-wide academic, attendance, and financial reports." },
-      { icon:"🏛️", title:"Multi-Campus Control",    desc:"Manage multiple campuses from a single admin console." },
-      { icon:"🔐", title:"Role-Based Access",        desc:"Define granular permissions for every staff role." },
-      { icon:"📜", title:"Certificate Management",   desc:"Issue bonafide and transfer certificates digitally." },
-      { icon:"🔍", title:"Full Audit Logs",           desc:"Complete activity trails for compliance and governance." },
-    ],
-  },
+  { key:"parent",  emoji:"👨‍👩‍👧", label:"Parent",   p:C.lavender, desc:"Complete real-time visibility into your child's school life.",
+    feats:[{i:"👶",t:"Multi-Child Support",d:"Manage multiple children from one account."},{i:"📅",t:"Attendance Tracking",d:"Real-time absent and late alerts."},{i:"📝",t:"Homework & Assignments",d:"View all submissions in one place."},{i:"📊",t:"Results & Report Cards",d:"Access marks and report cards instantly."},{i:"💳",t:"Online Fee Payments",d:"Pay fees and download receipts."},{i:"🚌",t:"Bus GPS Tracking",d:"Live tracking of the school bus."},{i:"🏥",t:"Medical Notifications",d:"Instant alerts for campus incidents."},{i:"🎫",t:"Event Registrations",d:"Register for school events and competitions."}] },
+  { key:"student", emoji:"🎓", label:"Student",  p:C.mint,     desc:"A personalised academic companion that keeps students on track.",
+    feats:[{i:"🖥️",t:"Personal Dashboard",d:"All academic info in one clean view."},{i:"📅",t:"Timetable Access",d:"Daily and weekly class schedules."},{i:"📤",t:"Homework Submission",d:"Submit assignments with deadline reminders."},{i:"📝",t:"Mock Tests & Exams",d:"Attempt tests and view results."},{i:"📜",t:"Digital Certificates",d:"Download achievement certificates."},{i:"📚",t:"Library Access",d:"Browse catalogue and issued books."},{i:"🏠",t:"Hostel Management",d:"Room details and outpass requests."},{i:"💬",t:"Internal Messaging",d:"Chat securely without sharing numbers."}] },
+  { key:"teacher", emoji:"📚", label:"Teacher",  p:C.sky,      desc:"Powerful tools so educators can focus on teaching, not paperwork.",
+    feats:[{i:"✅",t:"Attendance Management",d:"Mark attendance in seconds."},{i:"📝",t:"Homework Creation",d:"Create and assign homework digitally."},{i:"📊",t:"Marks Entry & Results",d:"Enter marks and publish results."},{i:"📋",t:"Report Card Generator",d:"Auto-generate report cards."},{i:"🤖",t:"AI Teaching Assistance",d:"AI question papers and homework."},{i:"🗓️",t:"Timetable Management",d:"Personal schedule and room info."},{i:"🏆",t:"Club Management",d:"Manage clubs and extracurriculars."},{i:"💬",t:"Parent Communication",d:"Send updates directly to parents."}] },
+  { key:"admin",   emoji:"🏫", label:"Admin",    p:C.violet,   desc:"Complete operational control over every department and process.",
+    feats:[{i:"📋",t:"Admissions & Enrollment",d:"Digital forms and document collection."},{i:"👥",t:"Staff Management",d:"Manage staff records, roles, and leave."},{i:"💰",t:"Fee Collection & Finance",d:"Track collections and manage invoices."},{i:"📊",t:"Reports & Analytics",d:"Institution-wide reports and dashboards."},{i:"🏛️",t:"Multi-Campus Control",d:"Manage multiple campuses from one console."},{i:"🔐",t:"Role-Based Access",d:"Granular permissions for every role."},{i:"📜",t:"Certificate Management",d:"Issue certificates digitally."},{i:"🔍",t:"Full Audit Logs",d:"Complete activity trails for governance."}] },
 ];
 
-const SMART_MODULES = [
-  { icon:"🚌", ...P.violet,   title:"Transport",  pts:["Live GPS Tracking","Route Management","Student Assignment","Driver Management","Arrival Notifications"] },
-  { icon:"🏠", ...P.sky,      title:"Hostel",     pts:["Room Allocation","Hostel Attendance","Outpass Requests","Visitor Management","Occupancy Monitoring"] },
-  { icon:"🏥", ...P.rose,     title:"Medical",    pts:["Health Records","Vaccination Tracking","Emergency Alerts","Incident Reports"] },
-  { icon:"📚", ...P.mint,     title:"Library",    pts:["Book Inventory","Issue & Return","Fine Management","Digital Records"] },
-  { icon:"🍽️", ...P.gold,    title:"Canteen",    pts:["Menu Management","Meal Booking","Food Ordering","Wallet Management"] },
+const MODULES = [
+  { icon:"🚌", p:C.violet,   title:"Transport",  pts:["Live GPS Tracking","Route Management","Student Assignment","Driver Management","Arrival Notifications"] },
+  { icon:"🏠", p:C.sky,      title:"Hostel",     pts:["Room Allocation","Hostel Attendance","Outpass Requests","Visitor Management","Occupancy Monitoring"] },
+  { icon:"🏥", p:C.rose,     title:"Medical",    pts:["Health Records","Vaccination Tracking","Emergency Alerts","Incident Reports"] },
+  { icon:"📚", p:C.mint,     title:"Library",    pts:["Book Inventory","Issue & Return","Fine Management","Digital Records"] },
+  { icon:"🍽️", p:C.gold,    title:"Canteen",    pts:["Menu Management","Meal Booking","Food Ordering","Wallet Management"] },
 ];
 
-const AI_FEATURES = [
-  { icon:"📝", ...P.violet,   title:"AI Homework Generator",      desc:"Auto-generate subject-specific homework tailored to each class level." },
-  { icon:"📋", ...P.sky,      title:"AI Question Paper Generator", desc:"Create balanced, curriculum-aligned question papers in seconds." },
-  { icon:"📊", ...P.mint,     title:"Performance Analytics",       desc:"Identify struggling students, top performers, and class trends." },
-  { icon:"📈", ...P.lavender, title:"Student Progress Insights",   desc:"Track growth trajectories and provide personalised recommendations." },
-  { icon:"⚠️", ...P.rose,    title:"Attendance Risk Prediction",  desc:"AI flags irregular attendance patterns before they become critical." },
-  { icon:"📑", ...P.gold,    title:"Smart Reports & Dashboards",  desc:"Automated reporting that surfaces the most important metrics." },
+const AI_FEATS = [
+  {icon:"📝",p:C.violet,   t:"AI Homework Generator",       d:"Auto-generate subject-specific homework tailored to each class level."},
+  {icon:"📋",p:C.sky,      t:"AI Question Paper Generator", d:"Create balanced, curriculum-aligned question papers in seconds."},
+  {icon:"📊",p:C.mint,     t:"Performance Analytics",       d:"Identify struggling students, top performers, and class trends."},
+  {icon:"📈",p:C.lavender, t:"Student Progress Insights",   d:"Track growth and provide personalised recommendations."},
+  {icon:"⚠️",p:C.rose,    t:"Attendance Risk Prediction",  d:"AI flags irregular patterns before they become critical."},
+  {icon:"📑",p:C.gold,    t:"Smart Reports & Dashboards",  d:"Automated reporting that surfaces the most important metrics."},
 ];
 
 const BENEFITS = [
-  "Improved Operational Efficiency", "Reduced Administrative Work",
-  "Better Parent Engagement",         "Real-Time Information Access",
-  "Enhanced Student Experience",      "Secure Data Management",
-  "Complete Digital Transformation",  "Scalable for All Institution Types",
+  {t:"Improved Operational Efficiency",p:C.violet},  {t:"Reduced Administrative Work",p:C.sky},
+  {t:"Better Parent Engagement",p:C.mint},           {t:"Real-Time Information Access",p:C.lavender},
+  {t:"Enhanced Student Experience",p:C.sky},         {t:"Secure Data Management",p:C.violet},
+  {t:"Complete Digital Transformation",p:C.mint},    {t:"Scalable for All Institutions",p:C.lavender},
 ];
 
 const PLANS = [
-  { name:"Starter",    icon:"🌱", iconBg:P.mint.bg,     monthly:"₹20",       yearly:"₹150",        periodM:"per student / month", periodY:"per student / year",           tagline:"For small schools beginning their digital journey.",            features:["Up to 500 students","5 role-based dashboards","Attendance & timetable","Basic fee management","Parent communication","Email support"],             cta:"Get Started",    ctaStyle:"plan-cta-ghost",   featured:false },
-  { name:"Pro",        icon:"⚡", iconBg:P.violet.bg,   monthly:"₹15 – ₹20", yearly:"₹100 – ₹150", periodM:"per student / month", periodY:"per student / year",           tagline:"Complete access for growing schools with flexible billing.",      features:["Up to 1,000 students","Everything in Starter","All Smart Campus Modules","AI-Powered Features","Transport & Hostel","Priority Support"],  cta:"Start Free Trial",ctaStyle:"plan-cta-primary", featured:true  },
-  { name:"Enterprise", icon:"🏛️",iconBg:P.gold.bg,     monthly:null,        yearly:null,           periodM:"",                   periodY:"tailored to your institution", tagline:"For large institutions, multi-campus groups, and school chains.", features:["Unlimited students","Multi-campus support","Custom integrations","Dedicated account manager","SLA guarantee","On-premise option"],          cta:"Contact Sales",  ctaStyle:"plan-cta-ghost",   featured:false },
+  { name:"Starter",    icon:"🌱", ibg:C.mint.bg,     monthly:"₹20",       yearly:"₹150",        pm:"per student / month", py:"per student / year",           tag:"For small schools beginning their digital journey.",           feats:["Up to 500 students","5 role dashboards","Attendance & timetable","Basic fee management","Parent communication","Email support"],            cta:"Get Started",     cs:"pc-cta-g", hot:false },
+  { name:"Pro",        icon:"⚡", ibg:C.violet.bg,   monthly:"₹15 – ₹20", yearly:"₹100 – ₹150", pm:"per student / month", py:"per student / year",           tag:"Complete access for growing schools with flexible billing.",   feats:["Up to 1,000 students","Everything in Starter","All Smart Campus Modules","AI-Powered Features","Transport & Hostel","Priority Support"], cta:"Start Free Trial", cs:"pc-cta-p", hot:true  },
+  { name:"Enterprise", icon:"🏛️",ibg:C.gold.bg,     monthly:null,        yearly:null,           pm:"",                   py:"tailored to your institution",  tag:"Custom plans for large institutions and multi-campus groups.", feats:["Unlimited students","Multi-campus support","Custom integrations","Dedicated account manager","SLA guarantee","On-premise option"],     cta:"Contact Sales",   cs:"pc-cta-g", hot:false },
 ];
 
-/* ══════════════════════════════════════════════
-   COMPONENTS
-══════════════════════════════════════════════ */
-function Navbar() {
+/* ─── Components ─── */
+function Nav() {
   return (
-    <nav className="navbar">
-      <div className="nav-inner">
-        <a href="#" className="nav-logo">
-          <div className="nav-logo-mark">🎓</div>
-          <span>Campus<span style={{ color:"var(--lavender)" }}>OS</span></span>
+    <nav className="nav">
+      <div className="nav-in">
+        <a href="#" className="nav-brand">
+          <div className="nav-mark">🎓</div>
+          Campus<span style={{color:"var(--c-violet)"}}>OS</span>
         </a>
         <ul className="nav-links">
-          {[["#features","Features"],["#modules","Modules"],["#ai","AI"],["#pricing","Pricing"],["#contact","Contact"]].map(([h,l])=>(
+          {[["#features","Features"],["#modules","Modules"],["#ai","AI"],["#pricing","Pricing"],["#contact","Contact"]].map(([h,l])=>
             <li key={h}><a href={h}>{l}</a></li>
-          ))}
+          )}
         </ul>
-        <div className="nav-actions">
-          <a href="#contact" className="btn btn-outline">Book Demo</a>
-          <a href="#pricing"  className="btn btn-primary">Get Started →</a>
+        <div className="nav-right">
+          <a href="#contact" className="btn btn-ghost btn-sm">Book Demo</a>
+          <a href="#pricing"  className="btn btn-primary btn-sm">Get Started →</a>
         </div>
       </div>
     </nav>
@@ -152,88 +91,54 @@ function Navbar() {
 }
 
 function Hero() {
+  const cards = [
+    {icon:"🎓",p:C.violet,   t:"Student Portal",    s:"Grades, Timetable & Assignments"},
+    {icon:"👨‍👩‍👧",p:C.lavender, t:"Parent Dashboard",  s:"Real-time child progress tracking"},
+    {icon:"📚",p:C.sky,      t:"Teacher Console",   s:"Attendance, Marks & Reports"},
+    {icon:"🏫",p:C.mint,     t:"Admin Control",     s:"Full institution management"},
+    {icon:"🤖",p:C.gold,    t:"AI Assistant",      s:"Smart automation & insights"},
+  ];
   return (
     <section className="hero">
-      <div className="hero-mesh">
-        <div className="hero-grid" />
-        <div className="hero-glow glow-a" />
-        <div className="hero-glow glow-b" />
-        <div className="hero-glow glow-c" />
-      </div>
-      <div className="hero-content">
-        <div className="hero-badge">
-          <span className="badge-dot">🇮🇳</span>
-          Built for Indian Educational Institutions
-        </div>
-        <h1 className="headline-1 hero-title">
-          The Complete Digital<br />
-          <span className="gradient-text">Operating System</span><br />
-          for Education
-        </h1>
-        <p className="hero-sub">
-          From Admission to Alumni — everything in one platform.
-          Academics, Administration, Communication, Finance,
-          Transport, Hostel, AI and more, all unified.
-        </p>
-        <div className="hero-actions">
-          <a href="#pricing"  className="btn btn-primary btn-lg">Start Free Trial →</a>
-          <a href="#features" className="btn btn-outline btn-lg">Explore Features</a>
-        </div>
-        <div className="hero-metrics">
-          {[
-            { num:"₹15",    label:"Starting per student" },
-            { num:"20+",    label:"Campus modules" },
-            { num:"5",      label:"Role dashboards" },
-            { num:"30 min", label:"Setup time" },
-          ].map((m,i)=>(
-            <div className="metric-item" key={i}>
-              <div className="metric-num gradient-text">{m.num}</div>
-              <div className="metric-label">{m.label}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-
-function InstitutionStrip() {
-  return (
-    <div className="logos-strip">
-      <p>Designed for every type of educational institution</p>
-      <div className="logos-row">
-        {[{e:"🏫",l:"Schools"},{e:"🏛️",l:"Colleges"},{e:"🎓",l:"Universities"},{e:"📚",l:"Coaching Centres"},{e:"🌐",l:"Multi-Campus Groups"}].map((t,i)=>(
-          <div className="logo-pill" key={i}><span>{t.e}</span>{t.l}</div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function AboutSection() {
-  return (
-    <section className="section" style={{ background:"var(--bg-1)" }} id="about">
-      <div className="container">
-        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:64, alignItems:"center" }}>
+      <div className="hero-blob blob1"/><div className="hero-blob blob2"/><div className="hero-blob blob3"/>
+      <div className="w">
+        <div className="hero-grid">
+          {/* left */}
           <div>
-            <div className="label">✦ About CampusOS</div>
-            <h2 className="headline-2" style={{ marginBottom:20 }}>
-              Transforming campuses into<br />
-              <span className="gradient-text">smart digital ecosystems</span>
-            </h2>
-            <p style={{ fontSize:15.5, color:"var(--t2)", lineHeight:1.8, marginBottom:20 }}>
-              CampusOS is committed to transforming educational institutions into smart, connected, and paperless campuses. Our platform helps management, teachers, students, and parents collaborate efficiently through a secure and centralised digital ecosystem.
+            <div className="tag hero-tag">🇮🇳 &nbsp;Built for Indian Educational Institutions</div>
+            <h1 className="h1 hero-h1">
+              The Complete Digital<br/>
+              <span className="gt">Operating System</span><br/>
+              for Education
+            </h1>
+            <p className="lead hero-lead">
+              From Admission to Alumni — everything in one platform.
+              Academics, Administration, Communication, Finance,
+              Transport, Hostel, AI and more, all unified.
             </p>
-            <p style={{ fontSize:14.5, color:"var(--t2)", lineHeight:1.8 }}>
-              Whether you run a single-branch school or a multi-campus university group, CampusOS scales to fit your needs — bringing every department onto one unified, intelligent platform.
-            </p>
+            <div className="hero-btns">
+              <a href="#pricing"  className="btn btn-primary btn-xl">Start Free Trial →</a>
+              <a href="#features" className="btn btn-white btn-xl">Explore Features</a>
+            </div>
+            <div className="hero-stats">
+              {[{n:"₹15",l:"Starting / student"},{n:"20+",l:"Campus modules"},{n:"5",l:"Role dashboards"},{n:"30 min",l:"Setup time"}].map((s,i)=>(
+                <div className="stat-cell" key={i}>
+                  <div className="stat-n gt">{s.n}</div>
+                  <div className="stat-l">{s.l}</div>
+                </div>
+              ))}
+            </div>
           </div>
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
-            {WHY_POINTS.map((p,i)=>(
-              <div key={i} className="card" style={{ padding:"13px 15px", display:"flex", alignItems:"center", gap:10, fontSize:13, fontWeight:600, color:"var(--t2)" }}>
-                <span style={{ fontSize:16 }}>{p.icon}</span>
-                <span>{p.text}</span>
+          {/* right */}
+          <div className="hero-cards">
+            {cards.map((c,i)=>(
+              <div className="hcard" key={i}>
+                <div className="hcard-icon" style={{background:c.p.bg}}>{c.icon}</div>
+                <div>
+                  <div className="hcard-t">{c.t}</div>
+                  <div className="hcard-s">{c.s}</div>
+                </div>
+                <div className="hcard-dot" style={{background:c.p.c}}/>
               </div>
             ))}
           </div>
@@ -243,24 +148,68 @@ function AboutSection() {
   );
 }
 
-function CoreServicesSection() {
+function Strip() {
   return (
-    <section className="section" id="services">
-      <div className="container">
-        <div style={{ marginBottom:52 }}>
-          <div className="label">✦ Our 4 Core Services</div>
-          <h2 className="headline-2">Every dimension of campus life,<br /><span className="gradient-text">fully covered</span></h2>
-          <p className="subtext" style={{ marginTop:14 }}>Four powerful pillars that together cover 100% of your institution's operational and academic needs.</p>
+    <div className="strip">
+      <div className="strip-label">Designed for every type of educational institution</div>
+      <div className="strip-row">
+        {[{e:"🏫",l:"Schools"},{e:"🏛️",l:"Colleges"},{e:"🎓",l:"Universities"},{e:"📚",l:"Coaching Centres"},{e:"🌐",l:"Multi-Campus Groups"}].map((t,i)=>(
+          <div className="strip-pill" key={i}><span>{t.e}</span>{t.l}</div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function About() {
+  return (
+    <section className="sec" style={{background:"var(--white)"}} id="about">
+      <div className="w">
+        <div className="about-grid">
+          <div>
+            <div className="tag" style={{marginBottom:20}}>✦ About CampusOS</div>
+            <h2 className="h2" style={{marginBottom:18}}>
+              Transforming campuses into<br/><span className="gt">smart digital ecosystems</span>
+            </h2>
+            <p style={{fontSize:15.5,color:"var(--ink-2)",lineHeight:1.8,marginBottom:20}}>
+              CampusOS is committed to transforming educational institutions into smart, connected, and paperless campuses. Our platform helps management, teachers, students, and parents collaborate efficiently through a secure and centralised digital ecosystem.
+            </p>
+            <p style={{fontSize:14.5,color:"var(--ink-2)",lineHeight:1.8}}>
+              Whether you run a single-branch school or a multi-campus university group, CampusOS scales to fit your needs — bringing every department onto one unified, intelligent platform.
+            </p>
+          </div>
+          <div className="why-grid">
+            {WHY.map((w,i)=>(
+              <div className="why-item" key={i}>
+                <span style={{fontSize:16}}>{w.icon}</span>
+                <span>{w.t}</span>
+              </div>
+            ))}
+          </div>
         </div>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:18 }}>
-          {CORE_SERVICES.map((s,i)=>(
-            <div key={i} className="card" style={{ padding:30 }}>
-              <div style={{ width:50, height:50, borderRadius:14, background:s.bg, display:"flex", alignItems:"center", justifyContent:"center", fontSize:22, marginBottom:18 }}>{s.icon}</div>
-              <h3 style={{ fontSize:18, fontWeight:800, color:s.c, marginBottom:10, letterSpacing:"-.02em" }}>{s.title}</h3>
-              <p style={{ fontSize:13.5, color:"var(--t2)", lineHeight:1.65, marginBottom:18 }}>{s.desc}</p>
-              <div style={{ display:"flex", flexWrap:"wrap", gap:7 }}>
-                {s.points.map((pt,pi)=>(
-                  <span key={pi} style={{ fontSize:11.5, fontWeight:600, padding:"4px 11px", borderRadius:99, background:s.bg, color:s.c, border:`1px solid ${s.border}` }}>{pt}</span>
+      </div>
+    </section>
+  );
+}
+
+function CoreServices() {
+  return (
+    <section className="sec" style={{background:"var(--bg-alt)"}} id="services">
+      <div className="w">
+        <div style={{marginBottom:48}}>
+          <div className="tag">✦ Our 4 Core Services</div>
+          <h2 className="h2" style={{marginTop:14,marginBottom:12}}>Every dimension of campus life,<br/><span className="gt">fully covered</span></h2>
+          <p className="lead">Four powerful pillars covering 100% of your institution's operational and academic needs.</p>
+        </div>
+        <div className="services-grid">
+          {SERVICES.map((s,i)=>(
+            <div className="scard" key={i} style={{borderTopColor:s.p.c,borderTopWidth:3}}>
+              <div className="scard-icon" style={{background:s.p.bg}}>{s.icon}</div>
+              <div className="scard-title" style={{color:s.p.c}}>{s.title}</div>
+              <div className="scard-desc">{s.desc}</div>
+              <div className="tags">
+                {s.pts.map((pt,pi)=>(
+                  <span key={pi} className="tag-sm" style={{background:s.p.bg,color:s.p.c,border:`1px solid ${s.p.border}`}}>{pt}</span>
                 ))}
               </div>
             </div>
@@ -271,38 +220,38 @@ function CoreServicesSection() {
   );
 }
 
-function PortalsSection() {
-  const [active, setActive] = useState("parent");
-  const portal = PORTALS.find(p => p.key === active)!;
+function Portals() {
+  const [active,setActive] = useState("parent");
+  const p = PORTALS.find(x=>x.key===active)!;
   return (
-    <section className="section" style={{ background:"var(--bg-1)" }} id="features">
-      <div className="container">
-        <div style={{ marginBottom:48 }}>
-          <div className="label">✦ Role-Based Portals</div>
-          <h2 className="headline-2">The right tools for<br /><span className="gradient-text">every person on campus</span></h2>
-          <p className="subtext" style={{ marginTop:14 }}>Purpose-built dashboards for each role — no clutter, no confusion, just the exact tools each person needs.</p>
+    <section className="sec" style={{background:"var(--white)"}} id="features">
+      <div className="w">
+        <div style={{marginBottom:48}}>
+          <div className="tag">✦ Role-Based Portals</div>
+          <h2 className="h2" style={{marginTop:14,marginBottom:12}}>The right tools for<br/><span className="gt">every person on campus</span></h2>
+          <p className="lead">Purpose-built dashboards for each role — no clutter, no confusion.</p>
         </div>
-        <div className="role-tabs">
-          {PORTALS.map(p=>(
-            <button key={p.key} id={`portal-${p.key}`} className={`role-tab ${active===p.key?"active":""}`} onClick={()=>setActive(p.key)}>
-              <span>{p.emoji}</span> {p.label}
+        <div className="ptabs">
+          {PORTALS.map(x=>(
+            <button key={x.key} id={`tab-${x.key}`} className={`ptab ${active===x.key?"on":""}`} onClick={()=>setActive(x.key)}>
+              {x.emoji} {x.label}
             </button>
           ))}
         </div>
-        <div className="role-panel">
-          <div className="role-panel-header">
-            <div className="role-avatar" style={{ background:portal.bg }}>{portal.emoji}</div>
+        <div className="ppanel">
+          <div className="ppanel-hd">
+            <div className="pavatar" style={{background:p.p.bg}}>{p.emoji}</div>
             <div>
-              <div className="role-panel-title" style={{ color:portal.c }}>{portal.label}</div>
-              <div className="role-panel-desc">{portal.desc}</div>
+              <div className="ptitle" style={{color:p.p.c}}>{p.label} Portal</div>
+              <div className="pdesc">{p.desc}</div>
             </div>
           </div>
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:12 }}>
-            {portal.features.map((f,i)=>(
-              <div key={i} className="feat-card">
-                <div className="feat-icon" style={{ background:portal.bg }}>{f.icon}</div>
-                <div className="feat-title">{f.title}</div>
-                <div className="feat-desc">{f.desc}</div>
+          <div className="pgrid">
+            {p.feats.map((f,i)=>(
+              <div className="pfeat" key={i}>
+                <div className="pfeat-icon" style={{background:p.p.bg}}>{f.i}</div>
+                <div className="pfeat-t">{f.t}</div>
+                <div className="pfeat-d">{f.d}</div>
               </div>
             ))}
           </div>
@@ -312,24 +261,25 @@ function PortalsSection() {
   );
 }
 
-function SmartModulesSection() {
+function Modules() {
   return (
-    <section className="section" id="modules">
-      <div className="container">
-        <div style={{ marginBottom:52 }}>
-          <div className="label">✦ Smart Campus Modules</div>
-          <h2 className="headline-2">Every campus service,<br /><span className="gradient-text">digitised and centralised</span></h2>
-          <p className="subtext" style={{ marginTop:14 }}>Beyond academics — CampusOS covers every physical and operational service from the bus gate to the hostel room.</p>
+    <section className="sec" style={{background:"var(--bg-alt)"}} id="modules">
+      <div className="w">
+        <div style={{marginBottom:48}}>
+          <div className="tag">✦ Smart Campus Modules</div>
+          <h2 className="h2" style={{marginTop:14,marginBottom:12}}>Every campus service,<br/><span className="gt">digitised and centralised</span></h2>
+          <p className="lead">Beyond academics — from the bus gate to the hostel room, CampusOS covers it all.</p>
         </div>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(5,1fr)", gap:14 }}>
-          {SMART_MODULES.map((m,i)=>(
-            <div key={i} className="card" style={{ padding:24, textAlign:"center" }}>
-              <div style={{ width:54, height:54, borderRadius:16, background:m.bg, display:"flex", alignItems:"center", justifyContent:"center", fontSize:24, margin:"0 auto 14px" }}>{m.icon}</div>
-              <h3 style={{ fontSize:14, fontWeight:700, color:m.c, marginBottom:14 }}>{m.title}</h3>
-              <ul style={{ display:"flex", flexDirection:"column", gap:8 }}>
+        <div className="mods-grid">
+          {MODULES.map((m,i)=>(
+            <div className="mod" key={i}>
+              <div className="mod-icon" style={{background:m.p.bg}}>{m.icon}</div>
+              <div className="mod-title" style={{color:m.p.c}}>{m.title}</div>
+              <ul className="mod-pts">
                 {m.pts.map((pt,pi)=>(
-                  <li key={pi} style={{ fontSize:12, color:"var(--t2)", display:"flex", alignItems:"center", gap:7 }}>
-                    <span style={{ width:16, height:16, borderRadius:"50%", background:m.bg, color:m.c, fontSize:9, fontWeight:900, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>✓</span>{pt}
+                  <li className="mod-pt" key={pi}>
+                    <span className="mod-check" style={{background:m.p.bg,color:m.p.c}}>✓</span>
+                    {pt}
                   </li>
                 ))}
               </ul>
@@ -341,46 +291,36 @@ function SmartModulesSection() {
   );
 }
 
-function EventsSection() {
-  const events = [{e:"🎉",l:"Annual Day"},{e:"🔬",l:"Science Fair"},{e:"🎭",l:"Cultural Fest"},{e:"📖",l:"Workshops"},{e:"🎤",l:"Seminars"},{e:"🏢",l:"Conferences"}];
+function Events() {
+  const evs = [{e:"🎉",l:"Annual Day"},{e:"🔬",l:"Science Fair"},{e:"🎭",l:"Cultural Fest"},{e:"📖",l:"Workshops"},{e:"🎤",l:"Seminars"},{e:"🏢",l:"Conferences"}];
   const sports = ["Registration Management","Team Creation","Fixture Scheduling","Results & Rankings","Certificates & Achievements"];
   return (
-    <section className="section" style={{ background:"var(--bg-1)" }} id="events">
-      <div className="container">
-        <div style={{ marginBottom:52 }}>
-          <div className="label">✦ Events & Tournaments</div>
-          <h2 className="headline-2">Manage every event<br /><span className="gradient-text">from registration to results</span></h2>
+    <section className="sec" style={{background:"var(--white)"}} id="events">
+      <div className="w">
+        <div style={{marginBottom:48}}>
+          <div className="tag">✦ Events & Tournaments</div>
+          <h2 className="h2" style={{marginTop:14,marginBottom:12}}>Manage every event<br/><span className="gt">from registration to results</span></h2>
         </div>
-        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:20 }}>
-          <div className="card" style={{ padding:30 }}>
-            <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:22 }}>
-              <div style={{ width:46, height:46, borderRadius:12, background:P.violet.bg, display:"flex", alignItems:"center", justifyContent:"center", fontSize:22 }}>🎉</div>
-              <div>
-                <h3 style={{ fontSize:16, fontWeight:700, color:"var(--t1)" }}>Event Management</h3>
-                <p style={{ fontSize:12, color:"var(--t3)" }}>End-to-end management for all campus events</p>
-              </div>
+        <div className="ev-grid">
+          <div className="ev-card">
+            <div className="ev-hd">
+              <div className="ev-hd-icon" style={{background:C.violet.bg}}>🎉</div>
+              <div><div className="ev-hd-t">Event Management</div><div className="ev-hd-s">End-to-end management for all campus events</div></div>
             </div>
-            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:9 }}>
-              {events.map((ev,i)=>(
-                <div key={i} style={{ display:"flex", alignItems:"center", gap:8, padding:"10px 13px", borderRadius:10, border:"1px solid var(--border)", background:"var(--bg-card)", fontSize:13, fontWeight:600, color:"var(--t2)" }}>
-                  <span>{ev.e}</span>{ev.l}
-                </div>
-              ))}
+            <div className="ev-pills">
+              {evs.map((ev,i)=><div className="ev-pill" key={i}><span>{ev.e}</span>{ev.l}</div>)}
             </div>
           </div>
-          <div className="card" style={{ padding:30 }}>
-            <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:22 }}>
-              <div style={{ width:46, height:46, borderRadius:12, background:P.mint.bg, display:"flex", alignItems:"center", justifyContent:"center", fontSize:22 }}>🏆</div>
-              <div>
-                <h3 style={{ fontSize:16, fontWeight:700, color:"var(--t1)" }}>Sports & Tournament Management</h3>
-                <p style={{ fontSize:12, color:"var(--t3)" }}>Full tournament lifecycle in one place</p>
-              </div>
+          <div className="ev-card">
+            <div className="ev-hd">
+              <div className="ev-hd-icon" style={{background:C.mint.bg}}>🏆</div>
+              <div><div className="ev-hd-t">Sports & Tournament Management</div><div className="ev-hd-s">Full tournament lifecycle in one place</div></div>
             </div>
-            <div style={{ display:"flex", flexDirection:"column", gap:9 }}>
+            <div className="ev-rows">
               {sports.map((s,i)=>(
-                <div key={i} style={{ display:"flex", alignItems:"center", gap:10, padding:"11px 14px", borderRadius:10, border:"1px solid var(--border)", background:"var(--bg-card)" }}>
-                  <span style={{ width:18, height:18, borderRadius:"50%", background:P.mint.bg, color:P.mint.c, fontSize:9, fontWeight:900, display:"flex", alignItems:"center", justifyContent:"center" }}>✓</span>
-                  <span style={{ fontSize:13, fontWeight:600, color:"var(--t2)" }}>{s}</span>
+                <div className="ev-row" key={i}>
+                  <span style={{width:16,height:16,borderRadius:"50%",background:C.mint.bg,color:C.mint.c,fontSize:9,fontWeight:900,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>✓</span>
+                  <span className="ev-row-t">{s}</span>
                 </div>
               ))}
             </div>
@@ -391,39 +331,39 @@ function EventsSection() {
   );
 }
 
-function CommunicationSection() {
-  const features = ["Direct Messaging","Group Discussions","Class Channels","Department Channels","Announcements","Push Notifications","Emergency Alerts"];
+function Communication() {
+  const feats = ["Direct Messaging","Group Discussions","Class Channels","Department Channels","Announcements","Push Notifications","Emergency Alerts"];
   const cards = [
-    { icon:"🔒", ...P.violet,   title:"No Phone Number Sharing",  desc:"Students, parents, and teachers communicate entirely within the platform. Zero personal data exposure." },
-    { icon:"📢", ...P.sky,      title:"Role-Targeted Broadcasts",  desc:"Send announcements to specific classes, roles, or departments — with read receipts and delivery tracking." },
-    { icon:"🚨", ...P.rose,     title:"Emergency Alerts",          desc:"Instant campus-wide emergency notifications that reach every device in seconds." },
+    {icon:"🔒",p:C.violet,t:"No Phone Number Sharing",d:"Students, parents, and teachers communicate entirely within the platform. Zero personal data exposure."},
+    {icon:"📢",p:C.sky,   t:"Role-Targeted Broadcasts",d:"Send announcements to specific classes, roles, or departments — with read receipts."},
+    {icon:"🚨",p:C.rose,  t:"Emergency Alerts",        d:"Instant campus-wide emergency notifications that reach every device in seconds."},
   ];
   return (
-    <section className="section" id="communication">
-      <div className="container">
-        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:64, alignItems:"center" }}>
+    <section className="sec" style={{background:"var(--bg-alt)"}} id="communication">
+      <div className="w">
+        <div className="comm-grid">
           <div>
-            <div className="label">✦ Communication System</div>
-            <h2 className="headline-2" style={{ marginBottom:18 }}>Ditch WhatsApp groups.<br /><span className="gradient-text">Go fully secure.</span></h2>
-            <p style={{ fontSize:14.5, color:"var(--t2)", lineHeight:1.78, marginBottom:28 }}>
+            <div className="tag" style={{marginBottom:20}}>✦ Communication System</div>
+            <h2 className="h2" style={{marginBottom:16}}>Ditch WhatsApp groups.<br/><span className="gt">Go fully secure.</span></h2>
+            <p style={{fontSize:14.5,color:"var(--ink-2)",lineHeight:1.8,marginBottom:28}}>
               CampusOS eliminates the need for WhatsApp groups and personal phone number sharing. Every conversation happens inside a secure, role-controlled environment.
             </p>
-            <div style={{ display:"flex", flexDirection:"column", gap:9 }}>
-              {features.map((f,i)=>(
-                <div key={i} className="card" style={{ padding:"11px 15px", display:"flex", alignItems:"center", gap:11, fontSize:13, fontWeight:600, color:"var(--t2)" }}>
-                  <span style={{ width:18, height:18, borderRadius:"50%", background:P.violet.bg, color:P.violet.c, fontSize:9, fontWeight:900, display:"flex", alignItems:"center", justifyContent:"center" }}>✓</span>
+            <div className="comm-feats">
+              {feats.map((f,i)=>(
+                <div className="comm-feat" key={i}>
+                  <span className="comm-check" style={{background:C.violet.bg,color:C.violet.c}}>✓</span>
                   {f}
                 </div>
               ))}
             </div>
           </div>
-          <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
+          <div className="comm-cards">
             {cards.map((c,i)=>(
-              <div key={i} className="card" style={{ padding:24, display:"flex", gap:16 }}>
-                <div style={{ width:46, height:46, borderRadius:12, background:c.bg, display:"flex", alignItems:"center", justifyContent:"center", fontSize:22, flexShrink:0 }}>{c.icon}</div>
+              <div className="comm-card" key={i}>
+                <div className="comm-cicon" style={{background:c.p.bg}}>{c.icon}</div>
                 <div>
-                  <h3 style={{ fontSize:14, fontWeight:700, color:c.c, marginBottom:6 }}>{c.title}</h3>
-                  <p style={{ fontSize:12.5, color:"var(--t2)", lineHeight:1.6 }}>{c.desc}</p>
+                  <div className="comm-ct" style={{color:c.p.c}}>{c.t}</div>
+                  <div className="comm-cd">{c.d}</div>
                 </div>
               </div>
             ))}
@@ -434,21 +374,21 @@ function CommunicationSection() {
   );
 }
 
-function AISection() {
+function AI() {
   return (
-    <section className="section" style={{ background:"var(--bg-1)" }} id="ai">
-      <div className="container">
-        <div style={{ marginBottom:52 }}>
-          <div className="label">✦ AI-Powered Campus</div>
-          <h2 className="headline-2">Smart automation that works<br /><span className="gradient-text">for every educator</span></h2>
-          <p className="subtext" style={{ marginTop:14 }}>Leverage AI to reduce manual work, surface insights, and help teachers and administrators do more with less effort.</p>
+    <section className="sec" style={{background:"var(--white)"}} id="ai">
+      <div className="w">
+        <div style={{marginBottom:48}}>
+          <div className="tag">✦ AI-Powered Campus</div>
+          <h2 className="h2" style={{marginTop:14,marginBottom:12}}>Smart automation that works<br/><span className="gt">for every educator</span></h2>
+          <p className="lead">Reduce manual work, surface insights, and help teachers do more with less effort.</p>
         </div>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:14 }}>
-          {AI_FEATURES.map((f,i)=>(
-            <div key={i} className="card" style={{ padding:26 }}>
-              <div style={{ width:46, height:46, borderRadius:12, background:f.bg, display:"flex", alignItems:"center", justifyContent:"center", fontSize:22, marginBottom:16 }}>{f.icon}</div>
-              <h3 style={{ fontSize:14, fontWeight:700, color:f.c, marginBottom:8 }}>{f.title}</h3>
-              <p style={{ fontSize:12.5, color:"var(--t2)", lineHeight:1.65 }}>{f.desc}</p>
+        <div className="ai-grid">
+          {AI_FEATS.map((f,i)=>(
+            <div className="ai-card" key={i}>
+              <div className="ai-icon" style={{background:f.p.bg}}>{f.icon}</div>
+              <div className="ai-t" style={{color:f.p.c}}>{f.t}</div>
+              <div className="ai-d">{f.d}</div>
             </div>
           ))}
         </div>
@@ -457,20 +397,19 @@ function AISection() {
   );
 }
 
-function BenefitsSection() {
-  const palette = [P.violet,P.sky,P.mint,P.lavender,P.sky,P.mint,P.violet,P.lavender];
+function Benefits() {
   return (
-    <section className="section" id="benefits">
-      <div className="container">
-        <div style={{ textAlign:"center", marginBottom:48 }}>
-          <div className="label" style={{ margin:"0 auto 18px" }}>✦ Benefits</div>
-          <h2 className="headline-2">Why institutions choose<br /><span className="gradient-text">CampusOS</span></h2>
+    <section className="sec" style={{background:"var(--bg-alt)"}} id="benefits">
+      <div className="w">
+        <div style={{textAlign:"center",marginBottom:44}}>
+          <div className="tag" style={{margin:"0 auto 18px"}}>✦ Benefits</div>
+          <h2 className="h2">Why institutions choose <span className="gt">CampusOS</span></h2>
         </div>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:12 }}>
+        <div className="ben-grid">
           {BENEFITS.map((b,i)=>(
-            <div key={i} className="card" style={{ padding:"16px 18px", display:"flex", alignItems:"center", gap:11 }}>
-              <span style={{ width:20, height:20, borderRadius:"50%", background:palette[i].bg, color:palette[i].c, fontSize:10, fontWeight:900, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>✓</span>
-              <span style={{ fontSize:13, fontWeight:600, color:"var(--t2)" }}>{b}</span>
+            <div className="ben-item" key={i}>
+              <span className="ben-chk" style={{background:b.p.bg,color:b.p.c}}>✓</span>
+              <span className="ben-t">{b.t}</span>
             </div>
           ))}
         </div>
@@ -479,50 +418,48 @@ function BenefitsSection() {
   );
 }
 
-function PricingSection() {
-  const [billing, setBilling] = useState<"monthly"|"yearly">("yearly");
+function Pricing() {
+  const [bill,setBill] = useState<"m"|"y">("y");
   return (
-    <section className="section pricing-section" id="pricing">
-      <div className="container">
-        <div style={{ textAlign:"center" }}>
-          <div className="label" style={{ margin:"0 auto 20px" }}>✦ Pricing</div>
-          <h2 className="headline-2">Simple, transparent<br /><span className="gradient-text">pricing for every school</span></h2>
-          <p className="subtext" style={{ margin:"14px auto 32px", textAlign:"center" }}>Starting from ₹15 per student per month. No hidden charges. No lock-in. Scale at your pace.</p>
-          <div className="billing-toggle">
-            <button id="billing-monthly" className={`toggle-btn ${billing==="monthly"?"on":""}`} onClick={()=>setBilling("monthly")}>Monthly</button>
-            <button id="billing-yearly"  className={`toggle-btn ${billing==="yearly" ?"on":""}`} onClick={()=>setBilling("yearly")}>
-              Yearly {billing==="yearly"&&<span className="save-chip">Save 37%</span>}
+    <section className="sec" style={{background:"var(--white)"}} id="pricing">
+      <div className="w">
+        <div style={{textAlign:"center",marginBottom:8}}>
+          <div className="tag" style={{margin:"0 auto 18px"}}>✦ Pricing</div>
+          <h2 className="h2" style={{marginBottom:12}}>Simple, transparent<br/><span className="gt">pricing for every school</span></h2>
+          <p className="lead" style={{margin:"0 auto 32px",textAlign:"center"}}>Starting from ₹15 per student per month. No hidden charges. No lock-in.</p>
+        </div>
+        <div className="billing-row">
+          <div className="billing-tog">
+            <button id="bill-m" className={`tog-btn ${bill==="m"?"on":""}`} onClick={()=>setBill("m")}>Monthly</button>
+            <button id="bill-y" className={`tog-btn ${bill==="y"?"on":""}`} onClick={()=>setBill("y")}>
+              Yearly {bill==="y"&&<span className="save-badge">Save 37%</span>}
             </button>
           </div>
         </div>
-        <div className="pricing-grid" style={{ marginTop:44 }}>
+        <div className="pc-grid">
           {PLANS.map((plan,i)=>(
-            <div key={i} className={`price-card ${plan.featured?"featured":""}`}>
-              {plan.featured&&<div className="featured-badge">Most Popular</div>}
-              <div className="plan-icon" style={{ background:plan.iconBg }}>{plan.icon}</div>
-              <div className="plan-name">{plan.name}</div>
-              {plan.monthly ? (
-                <>
-                  <div className="plan-price">{billing==="monthly"?plan.monthly:plan.yearly}</div>
-                  <div className="plan-period">{billing==="monthly"?plan.periodM:plan.periodY}</div>
-                </>
-              ) : (
-                <>
-                  <div className="plan-price-custom">Custom</div>
-                  <div className="plan-period">{plan.periodY}</div>
-                </>
+            <div key={i} className={`pc ${plan.hot?"hot":""}`}>
+              {plan.hot&&<div className="pc-badge">Most Popular</div>}
+              <div className="pc-icon" style={{background:plan.ibg}}>{plan.icon}</div>
+              <div className="pc-name">{plan.name}</div>
+              {plan.monthly?(
+                <><div className="pc-price">{bill==="m"?plan.monthly:plan.yearly}</div>
+                <div className="pc-per">{bill==="m"?plan.pm:plan.py}</div></>
+              ):(
+                <><div className="pc-custom">Custom</div>
+                <div className="pc-per">{plan.py}</div></>
               )}
-              <div className="plan-tagline">{plan.tagline}</div>
-              <ul className="plan-features">
-                {plan.features.map((f,fi)=>(
-                  <li className="plan-feature" key={fi}><span className="check-icon">✓</span>{f}</li>
+              <div className="pc-tag">{plan.tag}</div>
+              <ul className="pc-feats">
+                {plan.feats.map((f,fi)=>(
+                  <li className="pc-feat" key={fi}><span className="pc-chk">✓</span>{f}</li>
                 ))}
               </ul>
-              <button className={`plan-cta ${plan.ctaStyle}`} id={`plan-${plan.name.toLowerCase()}`}>{plan.cta}</button>
+              <button className={`pc-cta ${plan.cs}`} id={`plan-${plan.name.toLowerCase()}`}>{plan.cta}</button>
             </div>
           ))}
         </div>
-        <p style={{ textAlign:"center", fontSize:13, color:"var(--t3)", marginTop:24 }}>
+        <p style={{textAlign:"center",fontSize:13,color:"var(--ink-3)",marginTop:24}}>
           14-day free trial · No credit card required · Cancel anytime
         </p>
       </div>
@@ -530,48 +467,42 @@ function PricingSection() {
   );
 }
 
-function MissionSection() {
+function Mission() {
   return (
-    <section className="section" style={{ background:"var(--bg-1)" }}>
-      <div className="container">
-        <div className="cta-wrap" style={{ padding:"60px 48px" }}>
-          <div className="cta-content">
-            <div className="label" style={{ margin:"0 auto 24px" }}>✦ Our Mission</div>
-            <blockquote style={{ fontSize:"clamp(17px,2.2vw,24px)", fontWeight:700, color:"var(--t1)", lineHeight:1.6, maxWidth:680, margin:"0 auto 28px", letterSpacing:"-.02em" }}>
-              "To empower educational institutions with innovative technology solutions that simplify management, enhance communication, improve learning experiences, and create truly digital campuses."
-            </blockquote>
-            <div style={{ width:48, height:3, background:"linear-gradient(90deg,var(--violet),var(--sky),var(--mint))", borderRadius:99, margin:"0 auto 28px" }} />
-            <p style={{ fontSize:20, fontWeight:900, letterSpacing:"-.03em" }}>
-              <span className="gradient-text">One Platform. One Ecosystem. One Digital Campus.</span>
-            </p>
-          </div>
+    <section className="sec" style={{background:"var(--bg-alt)"}}>
+      <div className="w">
+        <div className="mission">
+          <div className="tag" style={{margin:"0 auto 24px",display:"inline-flex"}}>✦ Our Mission</div>
+          <p className="mission-q">
+            "To empower educational institutions with innovative technology solutions that simplify management, enhance communication, improve learning experiences, and create truly digital campuses."
+          </p>
+          <div className="mission-line"/>
+          <p className="mission-slug"><span className="gt">One Platform. One Ecosystem. One Digital Campus.</span></p>
         </div>
       </div>
     </section>
   );
 }
 
-function CTASection() {
+function CTA() {
   return (
-    <section className="section" id="contact">
-      <div className="container">
-        <div className="cta-wrap">
-          <div className="cta-content">
-            <div className="label" style={{ margin:"0 auto 20px" }}>✦ Get Started Today</div>
-            <h2 className="cta-title">Ready to transform<br /><span className="gradient-text">your institution?</span></h2>
-            <p className="cta-sub">Join schools across India already on CampusOS. Set up in under 30 minutes — free, no card needed.</p>
-            <div className="cta-actions">
-              <button id="cta-trial" className="btn btn-primary btn-lg">🚀 Start Free Trial</button>
-              <button id="cta-demo"  className="btn btn-outline btn-lg">📞 Talk to Sales</button>
-            </div>
-            <div className="contact-row">
-              {[{key:"Email",val:"hello@campusos.io"},{key:"Phone",val:"+91 98765 43210"},{key:"Support",val:"Mon – Sat, 9 AM – 6 PM IST"}].map((c,i)=>(
-                <div className="contact-item" key={i}>
-                  <div className="contact-key">{c.key}</div>
-                  <div className="contact-val">{c.val}</div>
-                </div>
-              ))}
-            </div>
+    <section className="sec cta-sec" id="contact">
+      <div className="w">
+        <div className="cta-box">
+          <div className="tag" style={{margin:"0 auto 24px",display:"inline-flex"}}>✦ Get Started Today</div>
+          <h2 className="cta-h">Ready to transform<br/><span className="gt">your institution?</span></h2>
+          <p className="cta-p">Join schools across India already on CampusOS. Set up in under 30 minutes — free, no card needed.</p>
+          <div className="cta-btns">
+            <button id="cta-trial" className="btn btn-primary btn-xl">🚀 Start Free Trial</button>
+            <button id="cta-demo"  className="btn btn-white btn-xl">📞 Talk to Sales</button>
+          </div>
+          <div className="cta-contact">
+            {[{k:"Email",v:"hello@campusos.io"},{k:"Phone",v:"+91 98765 43210"},{k:"Support",v:"Mon – Sat, 9 AM – 6 PM IST"}].map((c,i)=>(
+              <div className="cc-item" key={i}>
+                <div className="cc-k">{c.k}</div>
+                <div className="cc-v">{c.v}</div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -582,32 +513,34 @@ function CTASection() {
 function Footer() {
   return (
     <footer className="footer">
-      <div className="container">
+      <div className="w">
         <div className="footer-grid">
           <div>
-            <div className="nav-logo" style={{ marginBottom:14 }}>
-              <div className="nav-logo-mark">🎓</div>
-              <span>Campus<span style={{ color:"var(--lavender)" }}>OS</span></span>
+            <div className="nav-brand">
+              <div className="nav-mark">🎓</div>
+              Campus<span style={{color:"var(--c-violet)"}}>OS</span>
             </div>
-            <p className="footer-desc">The complete Digital Campus Operating System for educational institutions across India. From admission to alumni — everything in one platform.</p>
+            <p className="footer-brand">
+              The complete Digital Campus Operating System for educational institutions across India.
+              From admission to alumni — everything in one platform.
+            </p>
           </div>
           {[
-            { title:"Platform",  links:[["#services","Core Services"],["#features","Role Portals"],["#modules","Smart Modules"],["#ai","AI Features"],["#pricing","Pricing"]] },
-            { title:"Portals",   links:[["#features","Parent Portal"],["#features","Student Portal"],["#features","Teacher Portal"],["#features","Admin Portal"]] },
-            { title:"Company",   links:[["#about","About Us"],["#contact","Contact"],["#","Privacy Policy"],["#","Terms of Service"]] },
+            {h:"Platform", ls:[["#services","Core Services"],["#features","Role Portals"],["#modules","Smart Modules"],["#ai","AI Features"],["#pricing","Pricing"]]},
+            {h:"Portals",  ls:[["#features","Parent Portal"],["#features","Student Portal"],["#features","Teacher Portal"],["#features","Admin Portal"]]},
+            {h:"Company",  ls:[["#about","About Us"],["#contact","Contact"],["#","Privacy Policy"],["#","Terms of Service"]]},
           ].map(col=>(
-            <div key={col.title}>
-              <div className="footer-heading">{col.title}</div>
-              <ul className="footer-list">
-                {col.links.map(([h,l])=><li key={l}><a href={h}>{l}</a></li>)}
+            <div key={col.h}>
+              <div className="footer-h">{col.h}</div>
+              <ul className="footer-links">
+                {col.ls.map(([h,l])=><li key={l}><a href={h}>{l}</a></li>)}
               </ul>
             </div>
           ))}
         </div>
-        <hr className="hr" />
-        <div className="footer-bottom" style={{ marginTop:28 }}>
+        <div className="footer-btm">
           <span>© {new Date().getFullYear()} CampusOS · Made in India 🇮🇳</span>
-          <div className="footer-bottom-links">
+          <div className="footer-btm-links">
             <a href="#">Privacy</a>
             <a href="#">Terms</a>
             <a href="#">Cookies</a>
@@ -618,27 +551,25 @@ function Footer() {
   );
 }
 
-/* ══════════════════════════════════════════════
-   PAGE
-══════════════════════════════════════════════ */
+/* ─── Page ─── */
 export default function Home() {
   return (
     <>
-      <Navbar />
+      <Nav />
       <main>
         <Hero />
-        <InstitutionStrip />
-        <AboutSection />
-        <CoreServicesSection />
-        <PortalsSection />
-        <SmartModulesSection />
-        <EventsSection />
-        <CommunicationSection />
-        <AISection />
-        <BenefitsSection />
-        <PricingSection />
-        <MissionSection />
-        <CTASection />
+        <Strip />
+        <About />
+        <CoreServices />
+        <Portals />
+        <Modules />
+        <Events />
+        <Communication />
+        <AI />
+        <Benefits />
+        <Pricing />
+        <Mission />
+        <CTA />
       </main>
       <Footer />
     </>
