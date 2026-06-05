@@ -218,7 +218,7 @@ export default function BackofficePage() {
       </div>
 
       {/* Table */}
-      <div className="glass-card" style={{ padding: 0, overflow: "hidden" }}>
+      <div className="glass-card" style={{ padding: 0, overflow: "visible" }}>
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr style={{ borderBottom: "1px solid var(--border)" }}>
@@ -239,7 +239,7 @@ export default function BackofficePage() {
               const showPass = revealMap[inst.id];
               const { color: planColor, bg: planBg } = PLAN_COLORS[inst.plan];
               return (
-                <tr key={inst.id} style={{ borderBottom: "1px solid var(--border)", transition: "background 0.15s" }}
+                <tr key={inst.id} style={{ borderBottom: "1px solid var(--border)", transition: "background 0.15s", position: actionMenu === inst.id ? "relative" : "static", zIndex: actionMenu === inst.id ? 51 : "auto" }}
                   onMouseOver={e => (e.currentTarget.style.background = "rgba(159,161,255,0.04)")}
                   onMouseOut={e => (e.currentTarget.style.background = "transparent")}
                 >
@@ -289,7 +289,7 @@ export default function BackofficePage() {
                       <MoreHorizontal size={15} />
                     </button>
                     {actionMenu === inst.id && (
-                      <div style={{ position: "absolute", right: 8, top: "calc(100% - 4px)", width: 190, background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: 12, padding: 8, boxShadow: "var(--shadow-lg)", zIndex: 50 }}>
+                      <div style={{ position: "absolute", right: 8, top: "calc(100% - 4px)", width: 190, background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: 12, padding: 8, boxShadow: "var(--shadow-lg)", zIndex: 60 }}>
                         {inst.status !== "Active" && (
                           <button className="hover-bg" onClick={() => setStatus(inst.id, "Active")} style={{ width: "100%", display: "flex", alignItems: "center", gap: 9, padding: "8px 10px", background: "none", border: "none", cursor: "pointer", borderRadius: 7, fontSize: 13, color: "#2d8c45" }}>
                             <CheckCircle2 size={13} /> Activate

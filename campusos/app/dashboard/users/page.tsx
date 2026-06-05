@@ -209,7 +209,7 @@ export default function UsersPage() {
       </div>
 
       {/* Table */}
-      <div className="glass-card" style={{ padding: 0, overflow: "hidden" }}>
+      <div className="glass-card" style={{ padding: 0, overflow: "visible" }}>
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr style={{ borderBottom: "1px solid var(--border)" }}>
@@ -231,7 +231,7 @@ export default function UsersPage() {
               const showPass = revealMap[u.id];
               const initials = u.name.split(" ").map((w: string) => w[0]).slice(0, 2).join("").toUpperCase();
               return (
-                <tr key={u.id} style={{ borderBottom: "1px solid var(--border)", transition: "background 0.15s" }}
+                <tr key={u.id} style={{ borderBottom: "1px solid var(--border)", transition: "background 0.15s", position: actionMenu === u.id ? "relative" : "static", zIndex: actionMenu === u.id ? 51 : "auto" }}
                   onMouseOver={e => (e.currentTarget.style.background = "rgba(159,161,255,0.04)")}
                   onMouseOut={e => (e.currentTarget.style.background = "transparent")}
                 >
@@ -280,7 +280,7 @@ export default function UsersPage() {
                       <MoreHorizontal size={15} />
                     </button>
                     {actionMenu === u.id && (
-                      <div style={{ position: "absolute", right: 8, top: "calc(100% - 4px)", width: 180, background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: 12, padding: 8, boxShadow: "var(--shadow-lg)", zIndex: 50 }}>
+                      <div style={{ position: "absolute", right: 8, top: "calc(100% - 4px)", width: 180, background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: 12, padding: 8, boxShadow: "var(--shadow-lg)", zIndex: 60 }}>
                         <button className="hover-bg" onClick={() => handleResetPass(u.id)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 9, padding: "8px 10px", background: "none", border: "none", cursor: "pointer", borderRadius: 7, fontSize: 13, color: "var(--text-secondary)" }}>
                           <RefreshCw size={13} /> Reset Password
                         </button>
