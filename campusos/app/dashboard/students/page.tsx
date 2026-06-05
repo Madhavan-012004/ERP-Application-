@@ -1,55 +1,33 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../../../context/AuthContext";
 import {
   Search, Plus, Filter, Download, MoreHorizontal,
-  GraduationCap, Phone, Mail, MapPin, Calendar,
-  ChevronLeft, ChevronRight, Eye, Edit, Trash2,
-  CheckCircle2, Clock, XCircle, Users, TrendingUp
+  GraduationCap, Eye, Edit, Trash2, CheckCircle2, TrendingUp, XCircle, Sparkles
 } from "lucide-react";
-
-const STUDENTS = [
-  { id: "STU-001", name: "Anjali Singh", class: "12-A", roll: "001", parent: "Rajesh Singh", phone: "XXXXXXXX90", fee: "Paid", attendance: 96.2, dob: "2007-04-12", status: "active", avatar: "AS", grade: "A+" },
-  { id: "STU-002", name: "Rahul Gupta", class: "12-B", roll: "032", parent: "Suresh Gupta", phone: "XXXXXXXX45", fee: "Pending", attendance: 88.5, dob: "2007-09-23", status: "active", avatar: "RG", grade: "A" },
-  { id: "STU-003", name: "Meera Nair", class: "11-A", roll: "015", parent: "Priya Nair", phone: "XXXXXXXX67", fee: "Paid", attendance: 94.1, dob: "2008-01-08", status: "active", avatar: "MN", grade: "A+" },
-  { id: "STU-004", name: "Vikram Shah", class: "12-A", roll: "022", parent: "Amit Shah", phone: "XXXXXXXX34", fee: "Overdue", attendance: 72.3, dob: "2007-07-15", status: "warning", avatar: "VS", grade: "B+" },
-  { id: "STU-005", name: "Pooja Rao", class: "11-B", roll: "008", parent: "Kavitha Rao", phone: "XXXXXXXX89", fee: "Paid", attendance: 97.8, dob: "2008-05-30", status: "active", avatar: "PR", grade: "A+" },
-  { id: "STU-006", name: "Arjun Mehta", class: "10-A", roll: "004", parent: "Nitin Mehta", phone: "XXXXXXXX12", fee: "Paid", attendance: 91.4, dob: "2009-02-18", status: "active", avatar: "AM", grade: "A" },
-  { id: "STU-007", name: "Sneha Joshi", class: "10-B", roll: "019", parent: "Ramesh Joshi", phone: "XXXXXXXX55", fee: "Pending", attendance: 83.6, dob: "2009-11-09", status: "active", avatar: "SJ", grade: "B+" },
-  { id: "STU-008", name: "Kiran Kumar", class: "9-A", roll: "041", parent: "Suresh Kumar", phone: "XXXXXXXX77", fee: "Overdue", attendance: 65.2, dob: "2010-06-22", status: "warning", avatar: "KK", grade: "C+" },
-];
 
 const AVATAR_COLORS = [
   "linear-gradient(135deg,#9FA1FF,#B5BAFF)",
   "linear-gradient(135deg,#AEE2FF,#9FA1FF)",
   "linear-gradient(135deg,#D9F9DF,#AEE2FF)",
   "linear-gradient(135deg,#B5BAFF,#9FA1FF)",
-  "linear-gradient(135deg,#AEE2FF,#B5BAFF)",
-  "linear-gradient(135deg,#9FA1FF,#AEE2FF)",
-  "linear-gradient(135deg,#D9F9DF,#B5BAFF)",
-  "linear-gradient(135deg,#B5BAFF,#AEE2FF)",
 ];
-
-function FeeStatusBadge({ status }: { status: string }) {
-  if (status === "Paid") return <span className="badge badge-mint">Paid</span>;
-  if (status === "Pending") return <span className="badge badge-yellow">Pending</span>;
-  return <span className="badge badge-red">Overdue</span>;
-}
-
-function AttendanceBadge({ pct }: { pct: number }) {
-  const color = pct >= 90 ? "badge-mint" : pct >= 75 ? "badge-yellow" : "badge-red";
-  return <span className={`badge ${color}`}>{pct}%</span>;
-}
 
 export default function StudentsPage() {
   const { user } = useAuth();
   const [search, setSearch] = useState("");
-  const [filterClass, setFilterClass] = useState("All");
-  const [selectedStudent, setSelectedStudent] = useState<any>(null);
+  const [students, setStudents] = useState<any[]>([]);
 
-  const filtered = STUDENTS.filter(s =>
-    (s.name.toLowerCase().includes(search.toLowerCase()) || s.id.includes(search)) &&
-    (filterClass === "All" || s.class === filterClass)
+  useEffect(() => {
+    if (!user?.tenantId) return;
+    try {
+      const allUsers = JSON.parse(localStorage.getItem("campusos_users") || "[]");
+      setStudents(allUsers.filter((u: any) => u.institutionId === user.tenantId && u.role === "Student"));
+    } catch {}
+  }, [user]);
+
+  const filtered = students.filter(s =>
+    (s.name.toLowerCase().includes(search.toLowerCase()) || s.loginId.includes(search.toLowerCase()))
   );
 
   return (
@@ -77,12 +55,12 @@ export default function StudentsPage() {
       </div>
 
       {/* Stats row */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px", marginBottom: "24px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px", marginBottom: "24px" }}>
         {[
-          { label: "Total Students", value: "1,847", icon: GraduationCap, color: "#9FA1FF", bg: "rgba(159,161,255,0.1)" },
-          { label: "Active", value: "1,792", icon: CheckCircle2, color: "#D9F9DF", bg: "rgba(217,249,223,0.1)" },
-          { label: "Attendance Today", value: "94.6%", icon: TrendingUp, color: "#AEE2FF", bg: "rgba(174,226,255,0.1)" },
-          ...(user?.role !== "Teacher" ? [{ label: "Fee Defaulters", value: "48", icon: XCircle, color: "#ff8080", bg: "rgba(255,128,128,0.1)" }] : []),
+          { label: "Total Students", value: students.length, icon: GraduationCap, color: "#9FA1FF", bg: "rgba(159,161,255,0.1)" },
+          { label: "Active", value: students.length, icon: CheckCircle2, color: "#D9F9DF", bg: "rgba(217,249,223,0.1)" },
+          { label: "Attendance Today", value: "0%", icon: TrendingUp, color: "#AEE2FF", bg: "rgba(174,226,255,0.1)" },
+          ...(user?.role !== "Teacher" ? [{ label: "Fee Defaulters", value: "0", icon: XCircle, color: "#ff8080", bg: "rgba(255,128,128,0.1)" }] : []),
         ].map((s, i) => (
           <div key={i} className="stat-card" style={{ display: "flex", alignItems: "center", gap: "14px", padding: "16px 20px" }}>
             <div className="module-icon" style={{ background: s.bg }}>
@@ -97,31 +75,19 @@ export default function StudentsPage() {
       </div>
 
       {/* Table card */}
-      <div className="stat-card" style={{ padding: 0, overflow: "hidden" }}>
+      <div className="stat-card" style={{ padding: 0, overflow: "visible" }}>
         {/* Filters */}
         <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--border)", display: "flex", gap: "12px", alignItems: "center" }}>
           <div style={{ position: "relative", flex: 1 }}>
             <Search size={14} style={{ position: "absolute", left: "11px", top: "50%", transform: "translateY(-50%)", color: "var(--text-muted)" }} />
             <input
               className="input-field"
-              placeholder="Search by name or student ID..."
+              placeholder="Search by name or login ID..."
               value={search}
               onChange={e => setSearch(e.target.value)}
               style={{ paddingLeft: "34px", fontSize: "13px" }}
             />
           </div>
-          <select
-            className="input-field"
-            style={{ width: "140px", fontSize: "13px" }}
-            value={filterClass}
-            onChange={e => setFilterClass(e.target.value)}
-          >
-            <option>All</option>
-            <option>9-A</option><option>9-B</option>
-            <option>10-A</option><option>10-B</option>
-            <option>11-A</option><option>11-B</option>
-            <option>12-A</option><option>12-B</option>
-          </select>
           <button className="btn-secondary" style={{ gap: "6px", fontSize: "13px", flexShrink: 0 }}>
             <Filter size={13} /> Filters
           </button>
@@ -133,86 +99,70 @@ export default function StudentsPage() {
             <thead>
               <tr>
                 <th>Student</th>
-                <th>ID / Roll</th>
+                <th>Login ID</th>
                 <th>Class</th>
-                <th>Parent</th>
+                <th>Parent/Email</th>
                 <th>Attendance</th>
                 {user?.role !== "Teacher" && <th>Fee Status</th>}
-                <th>Grade</th>
                 <th style={{ textAlign: "right" }}>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {filtered.map((s, i) => (
-                <tr key={s.id}>
-                  <td>
-                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                      <div className="avatar" style={{ background: AVATAR_COLORS[i % AVATAR_COLORS.length], color: "#0a0b0f" }}>
-                        {s.avatar}
-                      </div>
-                      <div>
-                        <div style={{ fontSize: "13.5px", fontWeight: "600", color: "var(--text-primary)" }}>{s.name}</div>
-                        <div style={{ fontSize: "11.5px", color: "var(--text-muted)" }}>DOB: {s.dob}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div style={{ fontSize: "12.5px", fontWeight: "600", color: "#9FA1FF" }}>{s.id}</div>
-                    <div style={{ fontSize: "11.5px", color: "var(--text-muted)" }}>Roll: {s.roll}</div>
-                  </td>
-                  <td>
-                    <span className="badge badge-lavender">{s.class}</span>
-                  </td>
-                  <td>
-                    <div style={{ fontSize: "13px", color: "var(--text-secondary)" }}>{s.parent}</div>
-                    <div style={{ fontSize: "11.5px", color: "var(--text-muted)" }}>🔒 {s.phone}</div>
-                  </td>
-                  <td><AttendanceBadge pct={s.attendance} /></td>
-                  {user?.role !== "Teacher" && <td><FeeStatusBadge status={s.fee} /></td>}
-                  <td>
-                    <span style={{
-                      fontSize: "12.5px", fontWeight: "700",
-                      color: s.grade === "A+" ? "#9FA1FF" : s.grade === "A" ? "#AEE2FF" : s.grade === "B+" ? "#D9F9DF" : "#ffd060"
-                    }}>
-                      {s.grade}
-                    </span>
-                  </td>
-                  <td>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: "4px" }}>
-                      <button className="btn-ghost" style={{ padding: "6px" }}><Eye size={14} /></button>
-                      <button className="btn-ghost" style={{ padding: "6px" }}><Edit size={14} /></button>
-                      <button className="btn-ghost" style={{ padding: "6px", color: "rgba(255,128,128,0.7)" }}><Trash2 size={14} /></button>
-                    </div>
+              {filtered.length === 0 ? (
+                <tr>
+                  <td colSpan={7} style={{ padding: "48px 24px", textAlign: "center", color: "var(--text-muted)" }}>
+                    <GraduationCap size={32} style={{ margin: "0 auto 12px", display: "block", opacity: 0.3 }} />
+                    {search ? "No students match your search." : "No students added yet."}
                   </td>
                 </tr>
-              ))}
+              ) : filtered.map((s, i) => {
+                const initials = s.name.split(" ").map((w:string)=>w[0]).slice(0,2).join("").toUpperCase();
+                return (
+                  <tr key={s.id}>
+                    <td>
+                      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                        <div className="avatar" style={{ background: AVATAR_COLORS[i % AVATAR_COLORS.length], color: "#0a0b0f" }}>
+                          {initials}
+                        </div>
+                        <div>
+                          <div style={{ fontSize: "13.5px", fontWeight: "600", color: "var(--text-primary)" }}>{s.name}</div>
+                          <div style={{ fontSize: "11.5px", color: "var(--text-muted)" }}>Joined: {new Date(s.createdAt).toLocaleDateString()}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div style={{ fontSize: "12.5px", fontWeight: "600", color: "#9FA1FF", background: "rgba(159,161,255,0.1)", display: "inline-block", padding: "2px 6px", borderRadius: "4px" }}>{s.loginId}</div>
+                    </td>
+                    <td>
+                      <span className="badge badge-lavender">Unassigned</span>
+                    </td>
+                    <td>
+                      <div style={{ fontSize: "13px", color: "var(--text-secondary)" }}>{s.email || "No email"}</div>
+                    </td>
+                    <td><span className="badge badge-yellow">0%</span></td>
+                    {user?.role !== "Teacher" && <td><span className="badge badge-mint">N/A</span></td>}
+                    <td>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: "4px" }}>
+                        <button className="btn-ghost" style={{ padding: "6px" }}><Eye size={14} /></button>
+                        <button className="btn-ghost" style={{ padding: "6px" }}><Edit size={14} /></button>
+                        <button className="btn-ghost" style={{ padding: "6px", color: "rgba(255,128,128,0.7)" }}><Trash2 size={14} /></button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
 
         {/* Pagination */}
-        <div style={{ padding: "14px 20px", borderTop: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <span style={{ fontSize: "12.5px", color: "var(--text-muted)" }}>
-            Showing {filtered.length} of 1,847 students
-          </span>
-          <div style={{ display: "flex", gap: "4px" }}>
-            <button className="btn-ghost" style={{ padding: "6px 10px", fontSize: "12px" }}>
-              <ChevronLeft size={14} />
-            </button>
-            {[1,2,3,"...",187].map((p, i) => (
-              <button key={i} className="btn-ghost" style={{
-                padding: "6px 10px", fontSize: "12px",
-                background: p === 1 ? "rgba(159,161,255,0.15)" : "transparent",
-                color: p === 1 ? "#9FA1FF" : "var(--text-secondary)"
-              }}>
-                {p}
-              </button>
-            ))}
-            <button className="btn-ghost" style={{ padding: "6px 10px", fontSize: "12px" }}>
-              <ChevronRight size={14} />
-            </button>
+        {filtered.length > 0 && (
+          <div style={{ padding: "14px 20px", borderTop: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <span style={{ fontSize: "12.5px", color: "var(--text-muted)" }}>
+              Showing {filtered.length} of {students.length} students
+            </span>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
