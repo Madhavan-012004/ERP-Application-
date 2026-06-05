@@ -226,34 +226,53 @@ function Portals() {
   return (
     <section className="sec" style={{background:"var(--white)"}} id="features">
       <div className="w">
-        <div style={{marginBottom:48}}>
-          <div className="tag">✦ Role-Based Portals</div>
-          <h2 className="h2" style={{marginTop:14,marginBottom:12}}>The right tools for<br/><span className="gt">every person on campus</span></h2>
-          <p className="lead">Purpose-built dashboards for each role — no clutter, no confusion.</p>
+        <div style={{textAlign:"center",marginBottom:56}}>
+          <div className="tag" style={{marginBottom:18}}>✦ Role-Based Portals</div>
+          <h2 className="h2" style={{marginBottom:12}}>The right tools for<br/><span className="gt">every person on campus</span></h2>
+          <p className="lead" style={{margin:"0 auto"}}>Purpose-built dashboards for each role — no clutter, no confusion.</p>
         </div>
-        <div className="ptabs">
-          {PORTALS.map(x=>(
-            <button key={x.key} id={`tab-${x.key}`} className={`ptab ${active===x.key?"on":""}`} onClick={()=>setActive(x.key)}>
-              {x.emoji} {x.label}
-            </button>
-          ))}
-        </div>
-        <div className="ppanel">
-          <div className="ppanel-hd">
-            <div className="pavatar" style={{background:p.p.bg}}>{p.emoji}</div>
-            <div>
-              <div className="ptitle" style={{color:p.p.c}}>{p.label} Portal</div>
-              <div className="pdesc">{p.desc}</div>
-            </div>
-          </div>
-          <div className="pgrid">
-            {p.feats.map((f,i)=>(
-              <div className="pfeat" key={i}>
-                <div className="pfeat-icon" style={{background:p.p.bg}}>{f.i}</div>
-                <div className="pfeat-t">{f.t}</div>
-                <div className="pfeat-d">{f.d}</div>
-              </div>
+
+        <div className="portal-container">
+          {/* Sidebar */}
+          <div className="portal-sidebar">
+            {PORTALS.map(x=>(
+              <button 
+                key={x.key} 
+                className={`portal-tab ${active===x.key?"active":""}`} 
+                onClick={()=>setActive(x.key)}
+              >
+                <div className="ptab-icon" style={{background:active===x.key?x.p.bg:'transparent', color:active===x.key?x.p.c:'var(--ink-3)'}}>
+                  {x.emoji}
+                </div>
+                <div className="ptab-text">
+                  <div className="ptab-title">{x.label}</div>
+                  <div className="ptab-sub">Portal</div>
+                </div>
+              </button>
             ))}
+          </div>
+
+          {/* Content */}
+          <div className="portal-content">
+            <div className="portal-header">
+               <div className="ph-avatar" style={{background:p.p.bg}}>{p.emoji}</div>
+               <div>
+                 <h3 className="ph-title" style={{color:p.p.c}}>{p.label} Dashboard</h3>
+                 <p className="ph-desc">{p.desc}</p>
+               </div>
+            </div>
+            
+            <div className="portal-grid">
+              {p.feats.map((f,i)=>(
+                <div className="pf-card" key={i}>
+                   <div className="pf-icon" style={{background:p.p.bg, color:p.p.c}}>{f.i}</div>
+                   <div className="pf-body">
+                     <div className="pf-title">{f.t}</div>
+                     <div className="pf-desc">{f.d}</div>
+                   </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
