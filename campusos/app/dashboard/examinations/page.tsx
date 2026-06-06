@@ -47,7 +47,7 @@ function CustomTooltip({ active, payload, label }: any) {
 export default function ExaminationsDashboard() {
   const { user } = useAuth();
   const isStaff = user?.role === "Teacher" || user?.role === "Institution Admin" || user?.role === "Super Admin";
-  const isStudentOrParent = user?.role === "Student" || user?.role === "Parent";
+  const isStudentOrParent = user?.role === "Parent";
 
   return (
     <div className="page-content">

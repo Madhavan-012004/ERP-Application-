@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 const LS_USERS = "campusos_users";
 const LS_INSTITUTIONS = "campusos_institutions";
 
-type AllowedRole = "Teacher" | "Student" | "Parent" | "Institution Admin";
+type AllowedRole = "Teacher" | "Parent" | "Institution Admin";
 
 interface CampusUser {
   id: string;
@@ -55,7 +55,7 @@ function updateUserPassword(userId: string, newPass: string) {
 }
 
 function generateId(name: string, role: string, existing: CampusUser[], instId: string): string {
-  const prefix = role === "Teacher" ? "tch" : role === "Student" ? "stu" : role === "Parent" ? "par" : "adm";
+  const prefix = role === "Teacher" ? "tch" : role === "Parent" ? "par" : "adm";
   const base = name.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 6);
   const taken = new Set(existing.map(u => u.loginId));
   let id = `${prefix}_${base}`;
@@ -88,8 +88,7 @@ function CopyBtn({ text }: { text: string }) {
 const ROLE_CONFIG: Record<AllowedRole, { color: string; bg: string; icon: any }> = {
   "Institution Admin": { color: "#9FA1FF", bg: "rgba(159,161,255,0.12)", icon: Shield },
   "Teacher":          { color: "#2d8c45", bg: "rgba(45,140,69,0.12)",   icon: BookOpen },
-  "Student":          { color: "#5458c4", bg: "rgba(84,88,196,0.12)",   icon: GraduationCap },
-  "Parent":           { color: "#1a7ab5", bg: "rgba(26,122,181,0.12)",  icon: Baby },
+  "Parent":           { color: "#6062d6", bg: "rgba(96,98,214,0.12)",   icon: Baby },
 };
 
 export default function UsersPage() {
@@ -100,7 +99,7 @@ export default function UsersPage() {
   const [showModal, setShowModal] = useState(false);
   const [revealMap, setRevealMap] = useState<Record<string, boolean>>({});
   const [actionMenu, setActionMenu] = useState<string | null>(null);
-  const [form, setForm] = useState({ name: "", role: "Student" as AllowedRole, email: "" });
+  const [form, setForm] = useState({ name: "", role: "Parent" as AllowedRole, email: "" });
   const [formError, setFormError] = useState("");
 
   // Only Institution Admin can access
@@ -136,7 +135,7 @@ export default function UsersPage() {
     saveUser(newUser);
     refresh();
     setShowModal(false);
-    setForm({ name: "", role: "Student", email: "" });
+    setForm({ name: "", role: "Parent", email: "" });
   };
 
   const handleDelete = (id: string) => {
@@ -161,7 +160,6 @@ export default function UsersPage() {
 
   const counts = {
     Teacher: users.filter(u => u.role === "Teacher").length,
-    Student: users.filter(u => u.role === "Student").length,
     Parent:  users.filter(u => u.role === "Parent").length,
     "Institution Admin": users.filter(u => u.role === "Institution Admin").length,
   };
@@ -186,7 +184,7 @@ export default function UsersPage() {
 
       {/* Stats */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 14, marginBottom: 28 }}>
-        {(["Teacher", "Student", "Parent", "Institution Admin"] as AllowedRole[]).map(role => {
+        {(["Teacher", "Parent", "Institution Admin"] as AllowedRole[]).map(role => {
           const { color, bg, icon: Icon } = ROLE_CONFIG[role];
           return (
             <div key={role} className="stat-card" style={{ display: "flex", alignItems: "center", gap: 12, padding: "14px 16px" }}>
@@ -320,7 +318,7 @@ export default function UsersPage() {
                 {form.name && (
                   <div style={{ marginTop: 5, fontSize: 11.5, color: "var(--text-muted)" }}>
                     Login ID preview: <code style={{ color: "#9FA1FF" }}>
-                      {form.role === "Teacher" ? "tch" : form.role === "Student" ? "stu" : form.role === "Parent" ? "par" : "adm"}_{form.name.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 6)}
+                      {form.role === "Teacher" ? "tch" : form.role === "Parent" ? "par" : "adm"}_{form.name.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 6)}
                     </code>
                   </div>
                 )}
@@ -329,7 +327,7 @@ export default function UsersPage() {
               <div>
                 <label style={{ fontSize: 12.5, color: "var(--text-secondary)", fontWeight: 600, display: "block", marginBottom: 7 }}>Role *</label>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-                  {(["Student", "Teacher", "Parent", "Institution Admin"] as AllowedRole[]).map(role => {
+                  {(["Teacher", "Parent", "Institution Admin"] as AllowedRole[]).map(role => {
                     const { color, bg, icon: Icon } = ROLE_CONFIG[role];
                     const selected = form.role === role;
                     return (

@@ -31,7 +31,7 @@ interface InstitutionUser {
   loginId: string;
   password: string;
   name: string;
-  role: "Super Admin" | "Teacher" | "Student" | "Parent" | "Institution Admin";
+  role: "Super Admin" | "Teacher" | "Parent" | "Institution Admin";
   email?: string;
   createdAt: string;
 }

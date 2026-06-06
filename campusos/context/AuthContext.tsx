@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
-export type UserRole = "SaaS Owner" | "Super Admin" | "Institution Admin" | "Teacher" | "Student" | "Parent";
+export type UserRole = "SaaS Owner" | "Super Admin" | "Institution Admin" | "Teacher" | "Parent";
 
 export interface AuthUser {
   name: string;
@@ -31,8 +31,7 @@ const ROLE_AVATARS: Record<UserRole, string> = {
   "Super Admin": "linear-gradient(135deg,#9FA1FF,#B5BAFF)",
   "Institution Admin": "linear-gradient(135deg,#AEE2FF,#9FA1FF)",
   "Teacher": "linear-gradient(135deg,#D9F9DF,#AEE2FF)",
-  "Student": "linear-gradient(135deg,#B5BAFF,#D9F9DF)",
-  "Parent": "linear-gradient(135deg,#AEE2FF,#D9F9DF)",
+  "Parent": "linear-gradient(135deg,#B5BAFF,#D9F9DF)",
 };
 
 export function AuthProvider({ children }: { children: ReactNode }) {

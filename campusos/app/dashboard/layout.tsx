@@ -104,13 +104,14 @@ const ROLE_ACCESS: Record<UserRole, string[]> = {
     "/dashboard/medical",
     "/dashboard/transport",
   ],
-  "Student": [
+  "Parent": [
     "/dashboard",
     "/dashboard/timetable",
     "/dashboard/attendance",
     "/dashboard/assignments",
     "/dashboard/examinations",
     "/dashboard/hostel",
+    "/dashboard/finance",
     "/dashboard/transport",
     "/dashboard/library",
     "/dashboard/events",
@@ -120,18 +121,6 @@ const ROLE_ACCESS: Record<UserRole, string[]> = {
     "/dashboard/certificates",
     "/dashboard/medical",
     "/dashboard/canteen",
-    "/dashboard/settings",
-  ],
-  "Parent": [
-    "/dashboard",
-    "/dashboard/attendance",
-    "/dashboard/examinations",
-    "/dashboard/finance",
-    "/dashboard/transport",
-    "/dashboard/events",
-    "/dashboard/messages",
-    "/dashboard/announcements",
-    "/dashboard/certificates",
     "/dashboard/settings",
   ],
 };
@@ -195,16 +184,14 @@ function DashboardInner({ children }: { children: ReactNode }) {
     "Super Admin": "#6062d6",
     "Institution Admin": "#1a7ab5",
     "Teacher": "#2d8c45",
-    "Student": "#5458c4",
-    "Parent": "#1a7ab5",
+    "Parent": "#6062d6",
   };
   const roleBadgeClass: Record<UserRole, string> = {
     "SaaS Owner": "badge-yellow",
     "Super Admin": "badge-violet",
     "Institution Admin": "badge-sky",
     "Teacher": "badge-mint",
-    "Student": "badge-lavender",
-    "Parent": "badge-sky",
+    "Parent": "badge-lavender",
   };
 
   const handleLogout = () => {

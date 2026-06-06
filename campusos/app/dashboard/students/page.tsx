@@ -22,7 +22,7 @@ export default function StudentsPage() {
     if (!user?.tenantId) return;
     try {
       const allUsers = JSON.parse(localStorage.getItem("campusos_users") || "[]");
-      setStudents(allUsers.filter((u: any) => u.institutionId === user.tenantId && u.role === "Student"));
+      setStudents(allUsers.filter((u: any) => u.institutionId === user.tenantId && u.role === "Parent"));
     } catch {}
   }, [user]);
 
@@ -37,7 +37,7 @@ export default function StudentsPage() {
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div>
             <h1 style={{ fontSize: "24px", fontWeight: "800", color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
-              Student Management
+              Student / Parent Management
             </h1>
             <p style={{ fontSize: "13.5px", color: "var(--text-muted)", marginTop: "4px" }}>
               Manage all students across departments and classes
@@ -57,7 +57,7 @@ export default function StudentsPage() {
       {/* Stats row */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px", marginBottom: "24px" }}>
         {[
-          { label: "Total Students", value: students.length, icon: GraduationCap, color: "#9FA1FF", bg: "rgba(159,161,255,0.1)" },
+          { label: "Total Enrolled", value: students.length, icon: GraduationCap, color: "#9FA1FF", bg: "rgba(159,161,255,0.1)" },
           { label: "Active", value: students.length, icon: CheckCircle2, color: "#D9F9DF", bg: "rgba(217,249,223,0.1)" },
           { label: "Attendance Today", value: "0%", icon: TrendingUp, color: "#AEE2FF", bg: "rgba(174,226,255,0.1)" },
           ...(user?.role !== "Teacher" ? [{ label: "Fee Defaulters", value: "0", icon: XCircle, color: "#ff8080", bg: "rgba(255,128,128,0.1)" }] : []),

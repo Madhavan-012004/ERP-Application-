@@ -193,19 +193,18 @@ function AdminTeacherAttendance() {
   );
 }
 
-function StudentParentAttendance() {
+function ParentAttendance() {
   const { user } = useAuth();
-  const isParent = user?.role === "Parent";
   
   return (
     <>
       <div style={{ marginBottom: "24px", display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
         <div>
           <h1 style={{ fontSize: "24px", fontWeight: "800", color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
-            {isParent ? "Child's Attendance Report" : "My Attendance"}
+            Attendance Report
           </h1>
           <p style={{ fontSize: "13.5px", color: "var(--text-muted)", marginTop: "4px" }}>
-            {isParent ? "View Arjun's attendance across subjects and months" : "Track your subject-wise and monthly attendance"}
+            View attendance across subjects and months
           </p>
         </div>
       </div>
@@ -294,7 +293,7 @@ export default function AttendancePage() {
 
   return (
     <div className="page-content">
-      {isStaff ? <AdminTeacherAttendance /> : <StudentParentAttendance />}
+      {isStaff ? <AdminTeacherAttendance /> : <ParentAttendance />}
     </div>
   );
 }

@@ -24,7 +24,7 @@ const RECENT_MATERIALS = [
 
 function AcademicsDashboard() {
   const { user } = useAuth();
-  const isStudentOrParent = user?.role === "Student" || user?.role === "Parent";
+  const isStudentOrParent = user?.role === "Parent";
   
   return (
     <div className="page-content">

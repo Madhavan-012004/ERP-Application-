@@ -3,7 +3,6 @@
 import { useAuth } from "../../context/AuthContext";
 import AdminDashboard from "./AdminDashboard";
 import TeacherDashboard from "./TeacherDashboard";
-import StudentDashboard from "./StudentDashboard";
 import ParentDashboard from "./ParentDashboard";
 
 export default function DashboardPage() {
@@ -16,8 +15,6 @@ export default function DashboardPage() {
       return <AdminDashboard />;
     case "Teacher":
       return <TeacherDashboard />;
-    case "Student":
-      return <StudentDashboard />;
     case "Parent":
       return <ParentDashboard />;
     default:

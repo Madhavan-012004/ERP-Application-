@@ -17,7 +17,7 @@ const CHANNELS = [
 
 const DMS = [
   { id: 7, name: "Priya Sharma", role: "Teacher", avatar: "PS", unread: 2, online: true, color: "linear-gradient(135deg,#9FA1FF,#B5BAFF)" },
-  { id: 8, name: "Rahul Gupta", role: "Student", avatar: "RG", unread: 0, online: true, color: "linear-gradient(135deg,#AEE2FF,#9FA1FF)" },
+  { id: 8, name: "Rahul Gupta", role: "Parent", avatar: "RG", unread: 0, online: true, color: "linear-gradient(135deg,#AEE2FF,#9FA1FF)" },
   { id: 9, name: "Amit Kumar", role: "Parent", avatar: "AK", unread: 1, online: false, color: "linear-gradient(135deg,#D9F9DF,#AEE2FF)" },
   { id: 10, name: "Suresh Rao", role: "Staff", avatar: "SR", unread: 0, online: true, color: "linear-gradient(135deg,#B5BAFF,#9FA1FF)" },
 ];

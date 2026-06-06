@@ -200,7 +200,7 @@ export default function InstitutionPage() {
             <div className="stat-card" style={{ padding: "20px" }}>
               <h3 style={{ fontSize: "14px", fontWeight: "700", color: "var(--text-primary)", marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}><Cpu size={15} /> Tech Infrastructure</h3>
               {[
-                { label: "Student Portal", status: "Live", color: "#2d8c45" },
+                { label: "Student & Parent Portal", status: "Live", color: "#2d8c45" },
                 { label: "Teacher Dashboard", status: "Live", color: "#2d8c45" },
                 { label: "Parent App", status: "Live", color: "#2d8c45" },
                 { label: "AI Attendance", status: "Pilot", color: "#F59E0B" },

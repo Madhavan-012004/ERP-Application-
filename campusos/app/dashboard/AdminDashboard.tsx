@@ -14,7 +14,7 @@ export default function AdminDashboard() {
     try {
       const allUsers = JSON.parse(localStorage.getItem("campusos_users") || "[]");
       const myUsers = allUsers.filter((u: any) => u.institutionId === user.tenantId);
-      const studentCount = myUsers.filter((u: any) => u.role === "Student").length;
+      const studentCount = myUsers.filter((u: any) => u.role === "Parent").length;
       const staffCount = myUsers.filter((u: any) => u.role === "Teacher" || u.role === "Institution Admin").length;
       setCounts({ student: studentCount, staff: staffCount });
     } catch {}

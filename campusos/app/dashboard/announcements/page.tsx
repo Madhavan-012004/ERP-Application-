@@ -14,37 +14,37 @@ const ANNOUNCEMENTS = [
     id: 1, title: "Final Examination Schedule Released", category: "Academic", urgent: true, pinned: true,
     author: "Principal Dr. Sharma", authorRole: "Principal", date: "Today, 9:00 AM", readTime: "2 min",
     content: "The final examination timetable for the current semester has been published. Students are advised to check the schedule carefully and note any clashes. The exams will commence from December 20, 2024. Hall tickets will be distributed from December 16. Make sure your attendance is above 75% to be eligible.",
-    read: false, audience: ["Student", "Parent", "Teacher"], icon: "📋", reactions: { 👍: 42, ❤️: 18 }
+    read: false, audience: ["Parent", "Teacher"], icon: "📋", reactions: { "👍": 42, "❤️": 18 }
   },
   {
     id: 2, title: "Annual Sports Day — Registration Open", category: "Sports", urgent: false, pinned: true,
     author: "Sports Coordinator Mr. Patel", authorRole: "Teacher", date: "Yesterday, 11:30 AM", readTime: "3 min",
     content: "The Annual Sports Day is scheduled for January 15, 2025. Students interested in participating in field events, track, cricket, or football must register before December 20. Registration forms are available with the class teacher. Prize distribution will follow the events. Refreshments will be provided.",
-    read: false, audience: ["Student", "Parent"], icon: "🏅", reactions: { 👍: 65, 🎉: 31 }
+    read: false, audience: ["Parent"], icon: "🏅", reactions: { "👍": 65, "🎉": 31 }
   },
   {
     id: 3, title: "Parent-Teacher Meeting — December 18", category: "Events", urgent: false, pinned: false,
     author: "Administration", authorRole: "Admin", date: "Dec 3, 2:00 PM", readTime: "1 min",
     content: "Parent-Teacher meetings are scheduled for December 18, 2024 from 9:00 AM to 1:00 PM. Parents are requested to meet their respective class teachers and collect the progress cards. Kindly carry your ward's ID card. Parking will be available in the rear campus lot. Appointments can be pre-booked via the parent portal.",
-    read: true, audience: ["Parent", "Teacher"], icon: "🤝", reactions: { 👍: 38, ❤️: 14 }
+    read: true, audience: ["Parent", "Teacher"], icon: "🤝", reactions: { "👍": 38, "❤️": 14 }
   },
   {
     id: 4, title: "Library Hours Extended During Exams", category: "Academic", urgent: false, pinned: false,
     author: "Librarian Mrs. Nair", authorRole: "Staff", date: "Dec 2, 10:15 AM", readTime: "1 min",
     content: "The school library will remain open from 7:00 AM to 8:00 PM on all working days from December 15 to January 5 to support exam preparation. Reference books and digital resources will be available. Silence is mandatory inside the library. Food and beverages are strictly prohibited.",
-    read: true, audience: ["Student", "Teacher"], icon: "📚", reactions: { 👍: 27, 😊: 12 }
+    read: true, audience: ["Parent", "Teacher"], icon: "📚", reactions: { "👍": 27, "😊": 12 }
   },
   {
     id: 5, title: "School Fees Due — Last Date December 15", category: "Administrative", urgent: true, pinned: false,
     author: "Finance Department", authorRole: "Admin", date: "Dec 1, 9:00 AM", readTime: "2 min",
     content: "This is a reminder that the second semester fees are due by December 15, 2024. Late payments will attract a fine of ₹500 per week. Payments can be made via the online portal, bank transfer, or at the school office. Receipts will be generated automatically. Students with outstanding dues will not receive hall tickets.",
-    read: false, audience: ["Parent"], icon: "💰", reactions: { 👍: 15 }
+    read: false, audience: ["Parent"], icon: "💰", reactions: { "👍": 15 }
   },
   {
     id: 6, title: "New Chemistry Lab Inaugurated", category: "Events", urgent: false, pinned: false,
     author: "Principal Dr. Sharma", authorRole: "Principal", date: "Nov 30, 3:00 PM", readTime: "2 min",
     content: "We are pleased to announce the inauguration of our state-of-the-art Chemistry Laboratory. The lab is equipped with the latest instruments and safety equipment. Classes for grades 9-12 will now be conducted in the new lab. Safety protocols must be followed at all times. Students must wear lab coats.",
-    read: true, audience: ["Student", "Parent", "Teacher"], icon: "🔬", reactions: { 👍: 78, 🎉: 45 }
+    read: true, audience: ["Parent", "Teacher"], icon: "🔬", reactions: { "👍": 78, "🎉": 45 }
   },
 ];
 
