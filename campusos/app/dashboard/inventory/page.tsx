@@ -3,14 +3,14 @@ import { useState } from "react";
 import { useAuth } from "../../../context/AuthContext";
 import {
   Package, Box, Plus, Search, Filter, AlertTriangle, CheckCircle2,
-  TrendingDown, TrendingUp, Monitor, Beaker, Dribbble, Printer
+  TrendingDown, TrendingUp, Monitor, Beaker, CircleDot, Printer
 } from "lucide-react";
 
 // Mock Data
 const INVENTORY_ITEMS = [
   { id: "INV-1001", name: "Dell OptiPlex 3090", category: "Electronics", location: "Computer Lab 1", stock: 45, minStock: 5, status: "In Stock", icon: Monitor, color: "#9FA1FF" },
   { id: "INV-1002", name: "Microscopes (Compound)", category: "Lab Equipment", location: "Biology Lab", stock: 12, minStock: 15, status: "Low Stock", icon: Beaker, color: "#ff8080" },
-  { id: "INV-1003", name: "Basketballs (Spalding)", category: "Sports", location: "Gymnasium", stock: 24, minStock: 10, status: "In Stock", icon: Dribbble, color: "#ffd060" },
+  { id: "INV-1003", name: "Basketballs (Spalding)", category: "Sports", location: "Gymnasium", stock: 24, minStock: 10, status: "In Stock", icon: CircleDot, color: "#ffd060" },
   { id: "INV-1004", name: "A4 Paper Reams", category: "Stationery", location: "Main Store", stock: 2, minStock: 20, status: "Out of Stock", icon: Printer, color: "#c94040" },
   { id: "INV-1005", name: "Arduino Uno Kits", category: "Electronics", location: "Robotics Lab", stock: 30, minStock: 10, status: "In Stock", icon: Monitor, color: "#AEE2FF" },
 ];
